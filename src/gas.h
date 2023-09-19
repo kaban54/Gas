@@ -3,11 +3,12 @@
 
 #include "vec.h"
 #include <SFML/Graphics.hpp>
+#include <vector>
 
-const size_t BASE_CAPACITY = 8;
+const double BASE_MOL_RADIUS = 5;
 
-const double CIRCLE_MOL_RADIUS = 5;
-const double SQUARE_MOL_SIDE = 10;
+const sf::Color CIRCLE_MOL_COLOR = sf::Color::Red;
+const sf::Color SQUARE_MOL_COLOR = sf::Color::Yellow;
 
 enum MoleculeTypes {
     MOLECULE_CIRCLE = 1,
@@ -22,30 +23,35 @@ class Molecule {
     Vec pos;
     Vec velocity;
     double mass;
+    double radius;
 
-    explicit Molecule (const Vec& pos_, const Vec& velocity_, double mass_, MoleculeTypes type_);
+    explicit Molecule (const Vec& pos_, const Vec& velocity_, double mass_, MoleculeTypes type_, double radius_);
 
-    MoleculeTypes GetType ();
+    MoleculeTypes GetType () const;
 
-    double GetEnergy ();
+    double GetEnergy () const;
 
-    double GetMomentum ();
+    double GetMomentum () const;
 
     virtual void Draw (sf::RenderWindow& window) const = 0;
     
     void Move (double dt);
+
+    double ReflectX (double min_x, double max_x);
+
+    double ReflectY (double min_y, double max_y);
 };
 
 class CircleMol : public Molecule {
     public:
-    explicit CircleMol (const Vec& pos_, const Vec& velocity_, double mass_);
+    explicit CircleMol (const Vec& pos_, const Vec& velocity_, double mass_, double radius_ = BASE_MOL_RADIUS);
 
     virtual void Draw (sf::RenderWindow& window) const override;
 };
 
 class SquareMol : public Molecule {
     public:
-    explicit SquareMol (const Vec& pos_, const Vec& velocity_, double mass_);
+    explicit SquareMol (const Vec& pos_, const Vec& velocity_, double mass_, double radius_ = BASE_MOL_RADIUS);
 
     virtual void Draw (sf::RenderWindow& window) const override;
 };
@@ -55,11 +61,9 @@ class Gas {
     double max_x;
     double min_y;
     double max_y;
-    size_t num_of_molecules;
-    size_t capacity;
 
     public:
-    Molecule** molecules;
+    std::vector<Molecule*> molecules;
 
     explicit Gas (double min_x_, double min_y_, double max_x_, double max_y_);
 
@@ -70,6 +74,10 @@ class Gas {
     void MoveMolecules (double dt);
 
     void DrawMolecules (sf::RenderWindow& window);
+
+    double ReflectMolecules ();
+
+    void CollideMolecules ();
 };
 
 #endif

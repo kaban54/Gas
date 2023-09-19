@@ -16,9 +16,12 @@ int main () {
     sf::Image img;
     img.create (W, H);
 
-    Gas gas (0, 0, 600, 600);
+    Gas gas (0, 0, 1200, 1200);
 
-    
+    Molecule* mol = new CircleMol (Vec (0, 0), Vec (500, 600), 1, 15);
+    gas.AddMolecule (mol);
+    mol = new SquareMol (Vec (500, 400), Vec (700, 200), 1, 20);
+    gas.AddMolecule (mol);
 
     sf::Clock clk;
     double dt = 0;
@@ -38,12 +41,11 @@ int main () {
 
         dt = clk.restart().asSeconds();
         
-        texture.loadFromImage (img);
-        sprite.setTexture (texture);
+        gas.MoveMolecules (dt);
+        gas.ReflectMolecules ();
 
         window.clear ();
-        window.draw (sprite);
-
+        gas.DrawMolecules (window);
         window.display();
     }
 
