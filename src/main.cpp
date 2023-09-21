@@ -18,9 +18,9 @@ int main () {
 
     Gas gas (0, 0, 1200, 1200);
 
-    Molecule* mol = new CircleMol (Vec (0, 0), Vec (500, 600), 1, 15);
+    Molecule* mol = new SquareMol (Vec (0, 0), Vec (100, 100), 20);
     gas.AddMolecule (mol);
-    mol = new SquareMol (Vec (500, 400), Vec (700, 200), 1, 20);
+    mol = new SquareMol (Vec (500, 500), Vec (-100, -100), 20);
     gas.AddMolecule (mol);
 
     sf::Clock clk;
@@ -43,6 +43,7 @@ int main () {
         
         gas.MoveMolecules (dt);
         gas.ReflectMolecules ();
+        gas.CollideMolecules ();
 
         window.clear ();
         gas.DrawMolecules (window);

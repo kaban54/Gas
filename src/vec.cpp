@@ -1,5 +1,4 @@
 #include "vec.h"
-#include <stdio.h>
 
 Vec::Vec (double x_, double y_, double z_): 
     x (x_),
@@ -111,4 +110,8 @@ Ray::Ray (const Vec& start_, const Vec& dir_):
 
 double Distance (Ray ray, Vec point) {
     return ((ray.start - point) * !(ray.dir)).GetLen();
+}
+
+double GetRandAngle () {
+    return std::rand() / (RAND_MAX / (M_PI * 2));
 }

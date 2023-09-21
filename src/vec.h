@@ -2,6 +2,7 @@
 #define VEC_H
 
 #include <cmath>
+#include <cstdlib>
 
 class Vec {
     public:
@@ -58,5 +59,7 @@ class Ray {
 };
 
 double Distance (Ray ray, Vec point);
+
+double GetRandAngle ();
 
 #endif
