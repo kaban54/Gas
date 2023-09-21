@@ -16,7 +16,7 @@ int main () {
     sf::Image img;
     img.create (W, H);
 
-    Reactor rctr (100, 100, 900, 900);
+    Reactor rctr (100, 100, 900, 900, 20);
 
     sf::Clock clk;
     double dt = 0;

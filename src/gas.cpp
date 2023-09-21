@@ -202,6 +202,14 @@ void Gas::ReactSquareSquare (size_t index1, size_t index2) {
     RemoveMolecule (index1);
 }
 
+double Gas::GetTemperature() const{
+    double temperature = 0;
+    for (size_t i = 0; i < molecules.size(); i++)
+        temperature += molecules[i] -> GetEnergy();
+    
+    return temperature;
+}
+
 void ReflectMolecules (Molecule* mol1, Molecule* mol2) {
     Vec dif = mol1 -> pos - mol2 -> pos;
     dif.Normalize();
@@ -263,7 +271,7 @@ void Piston::ReflectMol (Molecule* mol) {
 }
 
 
-Reactor::Reactor (double min_x_, double min_y_, double max_x_, double max_y_):
+Reactor::Reactor (double min_x_, double min_y_, double max_x_, double max_y_, size_t num_of_molecules):
     min_x (min_x_),
     min_y (min_y_),
     max_x (max_x_),
@@ -271,7 +279,21 @@ Reactor::Reactor (double min_x_, double min_y_, double max_x_, double max_y_):
     walls_temp (0),
     pist (min_x_, min_y_, max_x_ - min_x_, PISTON_HEIGHT, min_y_, max_y_, PISTON_MASS),
     gas ()
-    {}
+    {
+        for (size_t i = 0; i < num_of_molecules; i++) {
+            
+            Vec pos (min_x + std::rand() / (RAND_MAX / (max_x - min_x)),
+                     min_y + std::rand() / (RAND_MAX / (max_y - min_y)));
+
+            Vec vel (std::rand() / (RAND_MAX / 400.), 0);
+            vel.RotateAroundZ (GetRandAngle());
+
+            Molecule* mol = nullptr;
+            if (i % 2 == 0) mol = new CircleMol (pos, vel, 1);
+            else            mol = new SquareMol (pos, vel, 1);
+            gas.AddMolecule (mol);
+        }
+    }
 
 void Reactor::Proceed (double dt) {
     gas.MoveMolecules (dt);
@@ -279,6 +301,10 @@ void Reactor::Proceed (double dt) {
     gas.CollideMolecules();
     ReflectOffWals();
     ReflectOffPiston();
+}
+
+double Reactor::GetTemperature() const {
+    return gas.GetTemperature();
 }
 
 void Reactor::ReflectOffWals() {

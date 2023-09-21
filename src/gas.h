@@ -101,6 +101,8 @@ class Gas {
     void ReactSquareCircle (size_t index1, size_t index2);
 
     void ReactSquareSquare (size_t index1, size_t index2);
+
+    double GetTemperature() const;
 };
 
 class Piston {
@@ -136,7 +138,7 @@ class Reactor {
     public:
     Gas gas;
 
-    explicit Reactor (double min_x_, double min_y_, double max_x_, double max_y_);
+    explicit Reactor (double min_x_, double min_y_, double max_x_, double max_y_, size_t num_of_molecules = 0);
 
     void Proceed (double dt);
 
