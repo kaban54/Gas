@@ -47,10 +47,6 @@ class Molecule {
     
     void Move (double dt);
 
-    double ReflectX (double min_x, double max_x);
-
-    double ReflectY (double min_y, double max_y);
-
     void SetMass (unsigned int new_mass);
 };
 

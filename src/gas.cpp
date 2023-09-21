@@ -28,24 +28,6 @@ void Molecule::Move (double dt) {
     dist_to_react -= velocity.GetLen() * dt;
 }
 
-double Molecule::ReflectX (double min_x, double max_x) {
-    if ((pos.x - radius <= min_x && velocity.x < 0) ||
-        (pos.x + radius >= max_x && velocity.x > 0)) {
-        velocity.x = -velocity.x;
-        return velocity.x * mass;
-    }
-    else return 0;
-}
-
-double Molecule::ReflectY (double min_y, double max_y) {
-    if ((pos.y - radius <= min_y && velocity.y < 0) ||
-        (pos.y + radius >= max_y && velocity.y > 0)) {
-        velocity.y = -velocity.y;
-        return velocity.y * mass;
-    }
-    else return 0;
-}
-
 void Molecule::SetMass (unsigned int new_mass) {
     mass = new_mass;
     radius = BASE_MOL_RADIUS + mass;
@@ -308,10 +290,25 @@ double Reactor::GetTemperature() const {
 }
 
 void Reactor::ReflectOffWals() {
-    double pressure = 0;
     for (size_t i = 0; i < gas.molecules.size(); i++) {
-        pressure += gas.molecules[i] -> ReflectX (min_x, max_x);
-        pressure += gas.molecules[i] -> ReflectY (min_y, max_y);
+        Molecule* mol = gas.molecules[i];
+
+        if (mol -> pos.x + mol -> radius >= max_x) {
+            mol -> pos.x = max_x - mol -> radius;
+            if (mol -> velocity.x > 0) mol -> velocity.x = -mol -> velocity.x;
+        }
+        if (mol -> pos.x - mol -> radius <= min_x) {
+            mol -> pos.x = min_x + mol -> radius;
+            if (mol -> velocity.x < 0) mol -> velocity.x = -mol -> velocity.x;
+        }
+        if (mol -> pos.y + mol -> radius >= max_y) {
+            mol -> pos.y = max_y - mol -> radius;
+            if (mol -> velocity.y > 0) mol -> velocity.y = -mol -> velocity.y;
+        }
+        if (mol -> pos.y - mol -> radius <= min_y) {
+            mol -> pos.y = min_y + mol -> radius;
+            if (mol -> velocity.y < 0) mol -> velocity.y = -mol -> velocity.y;
+        }
     }
 }
 
