@@ -16,12 +16,7 @@ int main () {
     sf::Image img;
     img.create (W, H);
 
-    Gas gas (0, 0, 1200, 1200);
-
-    Molecule* mol = new SquareMol (Vec (0, 0), Vec (1, 1) * 400, 100);
-    gas.AddMolecule (mol);
-    mol = new SquareMol (Vec (500, 500), Vec (-1, -1) * 400, 100);
-    gas.AddMolecule (mol);
+    Reactor rctr (100, 100, 900, 900);
 
     sf::Clock clk;
     double dt = 0;
@@ -36,17 +31,19 @@ int main () {
             if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Escape)
                     window.close();
+                if (event.key.code == sf::Keyboard::Q)
+                    rctr.AddCircle (400);
+                if (event.key.code == sf::Keyboard::W)
+                    rctr.AddSquare (400);
             }
         }
 
         dt = clk.restart().asSeconds();
         
-        gas.MoveMolecules (dt);
-        gas.ReflectMolecules ();
-        gas.CollideMolecules ();
+        rctr.Proceed (dt);
 
-        window.clear ();
-        gas.DrawMolecules (window);
+        window.clear();
+        rctr.Draw (window);
         window.display();
     }
 

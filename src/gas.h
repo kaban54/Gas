@@ -31,11 +31,11 @@ class Molecule {
     explicit Molecule (const Vec& pos_, const Vec& velocity_, unsigned int mass_,
                        MoleculeTypes type_, double dist_to_react_);
 
-    double GetEnergy () const;
+    double GetEnergy() const;
 
-    double GetMomentum () const;
+    double GetMomentum() const;
 
-    bool CanReact () const;
+    bool CanReact() const;
 
     virtual void Draw (sf::RenderWindow& window) const = 0;
     
@@ -45,8 +45,9 @@ class Molecule {
 
     double ReflectY (double min_y, double max_y);
 
-    void SetMass(unsigned int new_mass);
+    void SetMass (unsigned int new_mass);
 };
+
 
 class CircleMol : public Molecule {
     public:
@@ -66,18 +67,14 @@ class SquareMol : public Molecule {
 
 bool Intersect (Molecule* mol1, Molecule* mol2);
 
-class Gas {
-    double min_x;
-    double max_x;
-    double min_y;
-    double max_y;
 
+class Gas {
     public:
     std::vector<Molecule*> molecules;
 
-    explicit Gas (double min_x_, double min_y_, double max_x_, double max_y_);
+    explicit Gas ();
 
-    ~Gas ();
+    ~Gas();
 
     void AddMolecule (Molecule *mol);
 
@@ -87,9 +84,9 @@ class Gas {
 
     void DrawMolecules (sf::RenderWindow& window) const;
 
-    double ReflectMolecules ();
+    //double ReflectMolecules();
 
-    void CollideMolecules ();
+    void CollideMolecules();
 
     void React (size_t index1, size_t index2);
 
@@ -101,6 +98,37 @@ class Gas {
 
     void ReactSquareSquare (size_t index1, size_t index2);
 };
+
+
+class Reactor {
+    double min_x;
+    double max_x;
+    double min_y;
+    double max_y;
+    double walls_temp;
+
+    public:
+    Gas gas;
+
+    explicit Reactor (double min_x_, double min_y_, double max_x_, double max_y_);
+
+    void Proceed (double dt);
+
+    double GetPressure() const;
+
+    double GetTemperature() const;
+
+    void ReflectOffWals();
+
+    void Draw (sf::RenderWindow& window) const;
+
+    void DrawWalls (sf::RenderWindow& window) const;
+
+    void AddCircle (double vel);
+
+    void AddSquare (double vel);
+};
+
 
 void ReflectMols (Molecule* mol1, Molecule* mol2);
 

@@ -81,11 +81,7 @@ bool Intersect (Molecule* mol1, Molecule* mol2) {
 }
 
 
-Gas::Gas (double min_x_, double min_y_, double max_x_, double max_y_):
-    min_x (min_x_),
-    max_x (max_x_),
-    min_y (min_y_),
-    max_y (max_y_),
+Gas::Gas ():
     molecules ()
     {}
 
@@ -116,7 +112,7 @@ void Gas::MoveMolecules (double dt) {
         molecules[i] -> Move (dt);
     }
 }
-
+/*
 double Gas::ReflectMolecules () {
     double pressure = 0;
     for (size_t i = 0; i < molecules.size(); i++) {
@@ -125,7 +121,7 @@ double Gas::ReflectMolecules () {
     }
     return pressure;
 }
-
+*/
 void Gas::CollideMolecules () {
     for (size_t i = 0; i < molecules.size(); i++) {
         if (!(molecules[i] -> CanReact())) continue;
@@ -226,4 +222,55 @@ void ReflectMols (Molecule* mol1, Molecule* mol2) {
     
     mol1 -> velocity += (dif * (new_v1 - v1));
     mol2 -> velocity += (dif * (new_v2 - v2));
+}
+
+Reactor::Reactor (double min_x_, double min_y_, double max_x_, double max_y_):
+    min_x (min_x_),
+    min_y (min_y_),
+    max_x (max_x_),
+    max_y (max_y_),
+    walls_temp (0),
+    gas ()
+    {}
+
+void Reactor::Proceed (double dt) {
+    gas.MoveMolecules (dt);
+    gas.CollideMolecules ();
+    ReflectOffWals();
+}
+
+void Reactor::ReflectOffWals () {
+    double pressure = 0;
+    for (size_t i = 0; i < gas.molecules.size(); i++) {
+        pressure += gas.molecules[i] -> ReflectX (min_x, max_x);
+        pressure += gas.molecules[i] -> ReflectY (min_y, max_y);
+    }
+}
+
+void Reactor::Draw (sf::RenderWindow& window) const {
+    DrawWalls (window);
+    gas.DrawMolecules(window);
+}
+
+void Reactor::DrawWalls (sf::RenderWindow& window) const {
+    sf::RectangleShape box (sf::Vector2f(max_x - min_x + 10, max_y - min_y + 10));
+    box.setPosition (min_x - 5, min_y - 5);
+    box.setOutlineColor (sf::Color::White);
+    box.setFillColor (sf::Color::Black);
+    box.setOutlineThickness (5);
+    window.draw (box);
+}
+
+void Reactor::AddCircle (double vel) {
+    Vec velocity (vel, 0);
+    velocity.RotateAroundZ (GetRandAngle() / -4);
+    Molecule* mol = new CircleMol (Vec (min_x, max_y), velocity, 1);
+    gas.AddMolecule (mol);
+}
+
+void Reactor::AddSquare (double vel) {
+    Vec velocity (vel, 0);
+    velocity.RotateAroundZ (GetRandAngle() / 4 + M_PI);
+    Molecule* mol = new SquareMol (Vec (max_x, max_y), velocity, 1);
+    gas.AddMolecule (mol);
 }
