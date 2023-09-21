@@ -15,7 +15,7 @@ const sf::Color     PISTON_COLOR = sf::Color::Blue;
 
 const double MIN_REACTION_ENERGY = 320000;
 const double GRAV_ACC = 100;
-const int PISTON_MASS = 100;
+const int PISTON_MASS = 600;
 
 const double PISTON_HEIGHT = 20;
 const double REACTOR_WALLS_THIKNESS = 15;

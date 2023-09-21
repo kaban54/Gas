@@ -259,6 +259,7 @@ void Piston::ReflectMol (Molecule* mol) {
     double new_v1 = vy + v2 - v1;
     
     mol -> velocity.y = new_v1;
+    mol -> pos.y = y + height + mol -> radius;
 }
 
 
