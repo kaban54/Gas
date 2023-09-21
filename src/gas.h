@@ -11,8 +11,14 @@ const double BASE_MOL_RADIUS = 5;
 
 const sf::Color CIRCLE_MOL_COLOR = sf::Color::Red;
 const sf::Color SQUARE_MOL_COLOR = sf::Color::Yellow;
+const sf::Color     PISTON_COLOR = sf::Color::Blue;
 
 const double MIN_REACTION_ENERGY = 320000;
+const double GRAV_ACC = 100;
+const int PISTON_MASS = 100;
+
+const double PISTON_HEIGHT = 20;
+const double REACTOR_WALLS_THIKNESS = 15;
 
 enum MoleculeTypes {
     MOLECULE_CIRCLE = 0,
@@ -84,8 +90,6 @@ class Gas {
 
     void DrawMolecules (sf::RenderWindow& window) const;
 
-    //double ReflectMolecules();
-
     void CollideMolecules();
 
     void React (size_t index1, size_t index2);
@@ -99,6 +103,27 @@ class Gas {
     void ReactSquareSquare (size_t index1, size_t index2);
 };
 
+class Piston {
+    const int mass;
+    const double width;
+    const double min_y;
+    const double max_y;
+    const double x;
+    double vy;
+
+    public:
+    const double height;
+    double y;
+
+    explicit Piston (double x_, double y_, double width_, double height_,
+                     double min_y_, double max_y_, int mass_, double vy_ = 0);
+
+    void Move (double dt);
+
+    void Draw (sf::RenderWindow& window) const;
+
+    void ReflectMol (Molecule* mol);
+};
 
 class Reactor {
     double min_x;
@@ -106,6 +131,7 @@ class Reactor {
     double min_y;
     double max_y;
     double walls_temp;
+    Piston pist;
 
     public:
     Gas gas;
@@ -120,6 +146,8 @@ class Reactor {
 
     void ReflectOffWals();
 
+    void ReflectOffPiston ();
+
     void Draw (sf::RenderWindow& window) const;
 
     void DrawWalls (sf::RenderWindow& window) const;
@@ -130,6 +158,6 @@ class Reactor {
 };
 
 
-void ReflectMols (Molecule* mol1, Molecule* mol2);
+void ReflectMolecules (Molecule* mol1, Molecule* mol2);
 
 #endif

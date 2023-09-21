@@ -112,24 +112,17 @@ void Gas::MoveMolecules (double dt) {
         molecules[i] -> Move (dt);
     }
 }
-/*
-double Gas::ReflectMolecules () {
-    double pressure = 0;
-    for (size_t i = 0; i < molecules.size(); i++) {
-        pressure += molecules[i] -> ReflectX (min_x, max_x);
-        pressure += molecules[i] -> ReflectY (min_y, max_y);
-    }
-    return pressure;
-}
-*/
+
 void Gas::CollideMolecules () {
     for (size_t i = 0; i < molecules.size(); i++) {
         if (!(molecules[i] -> CanReact())) continue;
         for (size_t j = i + 1; j < molecules.size(); j++) {
             if (!(molecules[j] -> CanReact())) continue;
             if (Intersect (molecules[i], molecules[j])) {
-                if (molecules[i] -> GetEnergy() + molecules[j] -> GetEnergy() >= MIN_REACTION_ENERGY) React (i, j);
-                else ReflectMols (molecules[i], molecules[j]);
+                if (molecules[i] -> GetEnergy() + molecules[j] -> GetEnergy() >= MIN_REACTION_ENERGY)
+                    React (i, j);
+                else
+                    ReflectMolecules (molecules[i], molecules[j]);
             }
         }
     }
@@ -209,7 +202,7 @@ void Gas::ReactSquareSquare (size_t index1, size_t index2) {
     RemoveMolecule (index1);
 }
 
-void ReflectMols (Molecule* mol1, Molecule* mol2) {
+void ReflectMolecules (Molecule* mol1, Molecule* mol2) {
     Vec dif = mol1 -> pos - mol2 -> pos;
     dif.Normalize();
 
@@ -224,22 +217,70 @@ void ReflectMols (Molecule* mol1, Molecule* mol2) {
     mol2 -> velocity += (dif * (new_v2 - v2));
 }
 
+
+Piston::Piston (double x_, double y_, double width_, double height_,
+                double min_y_, double max_y_, int mass_, double vy_):
+    x (x_),
+    y (y_),
+    width (width_),
+    height (height_),
+    min_y (min_y_),
+    max_y (max_y_ - height_),
+    mass (mass_),
+    vy (vy_)
+    {}
+
+void Piston::Move (double dt) {
+    if (y > max_y) {
+        y = max_y;
+        vy = 0;
+    }
+    if (y < min_y) {
+        y = min_y;
+        vy = 0;
+    }
+    vy += GRAV_ACC * dt;
+    y += vy * dt;
+}
+
+void Piston::Draw (sf::RenderWindow& window) const {
+    sf::RectangleShape rect (sf::Vector2f(width, height));
+    rect.setPosition (x, y);
+    rect.setFillColor (PISTON_COLOR);
+    window.draw (rect);
+}
+
+void Piston::ReflectMol (Molecule* mol) {
+    double v1 = mol -> velocity.y;
+    double v2 = vy;
+    double k = mass / mol -> mass;
+
+    vy = (2 * v1 + v2 * (k - 1)) / (k + 1);
+    double new_v1 = vy + v2 - v1;
+    
+    mol -> velocity.y = new_v1;
+}
+
+
 Reactor::Reactor (double min_x_, double min_y_, double max_x_, double max_y_):
     min_x (min_x_),
     min_y (min_y_),
     max_x (max_x_),
     max_y (max_y_),
     walls_temp (0),
+    pist (min_x_, min_y_, max_x_ - min_x_, PISTON_HEIGHT, min_y_, max_y_, PISTON_MASS),
     gas ()
     {}
 
 void Reactor::Proceed (double dt) {
     gas.MoveMolecules (dt);
-    gas.CollideMolecules ();
+    pist.Move (dt);
+    gas.CollideMolecules();
     ReflectOffWals();
+    ReflectOffPiston();
 }
 
-void Reactor::ReflectOffWals () {
+void Reactor::ReflectOffWals() {
     double pressure = 0;
     for (size_t i = 0; i < gas.molecules.size(); i++) {
         pressure += gas.molecules[i] -> ReflectX (min_x, max_x);
@@ -247,17 +288,26 @@ void Reactor::ReflectOffWals () {
     }
 }
 
+void Reactor::ReflectOffPiston() {
+    for (size_t i = 0; i < gas.molecules.size(); i++) {
+        Molecule* mol = gas.molecules[i];
+        if (mol -> pos.y - mol -> radius <= pist.y + pist.height)
+            pist.ReflectMol (mol);
+    }
+}
+
 void Reactor::Draw (sf::RenderWindow& window) const {
     DrawWalls (window);
+    pist.Draw(window);
     gas.DrawMolecules(window);
 }
 
 void Reactor::DrawWalls (sf::RenderWindow& window) const {
-    sf::RectangleShape box (sf::Vector2f(max_x - min_x + 10, max_y - min_y + 10));
-    box.setPosition (min_x - 5, min_y - 5);
+    sf::RectangleShape box (sf::Vector2f(max_x - min_x, max_y - min_y));
+    box.setPosition (min_x, min_y);
     box.setOutlineColor (sf::Color::White);
     box.setFillColor (sf::Color::Black);
-    box.setOutlineThickness (5);
+    box.setOutlineThickness (REACTOR_WALLS_THIKNESS);
     window.draw (box);
 }
 
