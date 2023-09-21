@@ -18,9 +18,9 @@ int main () {
 
     Gas gas (0, 0, 1200, 1200);
 
-    Molecule* mol = new SquareMol (Vec (0, 0), Vec (100, 100), 20);
+    Molecule* mol = new SquareMol (Vec (0, 0), Vec (1, 1) * 400, 100);
     gas.AddMolecule (mol);
-    mol = new SquareMol (Vec (500, 500), Vec (-100, -100), 20);
+    mol = new SquareMol (Vec (500, 500), Vec (-1, -1) * 400, 100);
     gas.AddMolecule (mol);
 
     sf::Clock clk;

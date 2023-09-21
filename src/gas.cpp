@@ -1,14 +1,14 @@
 #include "gas.h"
 #include <stdlib.h>
 
-Molecule::Molecule (const Vec& pos_, const Vec& velocity_, int mass_,
-                    MoleculeTypes type_, double dist_to_react_, double radius_):
+Molecule::Molecule (const Vec& pos_, const Vec& velocity_, unsigned int mass_,
+                    MoleculeTypes type_, double dist_to_react_):
     pos (pos_),
     velocity (velocity_),
     mass (mass_),
     type (type_),
     dist_to_react (dist_to_react_),
-    radius (radius_)
+    radius (BASE_MOL_RADIUS + mass_)
     {}
 
 double Molecule::GetEnergy () const {
@@ -46,9 +46,14 @@ double Molecule::ReflectY (double min_y, double max_y) {
     else return 0;
 }
 
+void Molecule::SetMass (unsigned int new_mass) {
+    mass = new_mass;
+    radius = BASE_MOL_RADIUS + mass;
+}
 
-CircleMol::CircleMol (const Vec& pos_, const Vec& velocity_, int mass_, double dist_to_react_, double radius_):
-    Molecule (pos_, velocity_, mass_, MOLECULE_CIRCLE, dist_to_react_, radius_)
+
+CircleMol::CircleMol (const Vec& pos_, const Vec& velocity_, unsigned int mass_, double dist_to_react_):
+    Molecule (pos_, velocity_, mass_, MOLECULE_CIRCLE, dist_to_react_)
     {}
 
 void CircleMol::Draw (sf::RenderWindow& window) const {
@@ -59,8 +64,8 @@ void CircleMol::Draw (sf::RenderWindow& window) const {
 }
 
 
-SquareMol::SquareMol (const Vec& pos_, const Vec& velocity_, int mass_, double dist_to_react_, double radius_):
-    Molecule (pos_, velocity_, mass_, MOLECULE_SQUARE, dist_to_react_, radius_)
+SquareMol::SquareMol (const Vec& pos_, const Vec& velocity_, unsigned int mass_, double dist_to_react_):
+    Molecule (pos_, velocity_, mass_, MOLECULE_SQUARE, dist_to_react_)
     {}
 
 void SquareMol::Draw (sf::RenderWindow& window) const {
@@ -128,7 +133,7 @@ void Gas::CollideMolecules () {
             if (!(molecules[j] -> CanReact())) continue;
             if (Intersect (molecules[i], molecules[j])) {
                 if (molecules[i] -> GetEnergy() + molecules[j] -> GetEnergy() >= MIN_REACTION_ENERGY) React (i, j);
-                //else //REFLECT
+                else ReflectMols (molecules[i], molecules[j]);
             }
         }
     }
@@ -181,7 +186,7 @@ void Gas::ReactSquareCircle (size_t index1, size_t index2) {
     Vec newvel = !(mol1 -> velocity) * std::sqrt((mol1 -> GetEnergy () + mol2 -> GetEnergy ()) / newmass);
 
     mol1 -> velocity = newvel;
-    mol1 -> mass = newmass;
+    mol1 -> SetMass (newmass);
 
     RemoveMolecule (index2);
 }
@@ -199,11 +204,26 @@ void Gas::ReactSquareSquare (size_t index1, size_t index2) {
     vel.RotateAroundZ (GetRandAngle());
 
     for (int i = 0; i < num_of_new; i++) {
-        Molecule *mol = new CircleMol (pos, vel, 1, num_of_new * BASE_MOL_RADIUS / 3);
+        Molecule *mol = new CircleMol (pos, vel, 1, 30 + num_of_new * (BASE_MOL_RADIUS + 1) / 3);
         AddMolecule (mol);
         vel.RotateAroundZ (angle);
     }
 
     RemoveMolecule (index2);
     RemoveMolecule (index1);
+}
+
+void ReflectMols (Molecule* mol1, Molecule* mol2) {
+    Vec dif = mol1 -> pos - mol2 -> pos;
+    dif.Normalize();
+
+    double v1 = (mol1 -> velocity, dif);
+    double v2 = (mol2 -> velocity, dif);
+    double k = mol2 -> mass / mol1 -> mass;
+
+    double new_v2 = (2 * v1 + v2 * (k - 1)) / (k + 1);
+    double new_v1 = new_v2 + v2 - v1;
+    
+    mol1 -> velocity += (dif * (new_v1 - v1));
+    mol2 -> velocity += (dif * (new_v2 - v2));
 }
