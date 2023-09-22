@@ -1,4 +1,5 @@
 #include "gas.h"
+#include "buttons.h"
 #include <cmath>
 #include <iostream>
 #include <stdio.h>
@@ -6,28 +7,38 @@
 const int W = 1920;
 const int H = 1080;
 
+const char* FONT_FILENAME = "fonts/font.ttf";
+
+void RunReactorApp ();
 
 int main () {
-    sf::RenderWindow window (sf::VideoMode (W, H), "GAS EEEEEEE");
-    window.setFramerateLimit (600);
+    RunReactorApp ();
+    return 0;
+}
 
-    sf::Sprite sprite;
-    sf::Texture texture;
-    sf::Image img;
-    img.create (W, H);
 
-    Reactor rctr (50, 50, 650, 850, 100);
-
-    sf::Clock clk;
-    double dt = 0;
-
+void RunReactorApp () {
     sf::Font font;
-    font.loadFromFile("fonts/font.ttf");
+    font.loadFromFile(FONT_FILENAME);
 
     sf::Text fps_txt ("", font, 20);
     fps_txt.setPosition (0, 0);
     fps_txt.setFillColor (sf::Color::Cyan);
     char fps_str [8] = "";
+
+    Reactor rctr (50, 50, 650, 850, 100);
+
+
+    
+
+    TextButton test_btn (1000, 800, 200, 200, font, "ABCD");
+
+
+    sf::Clock clk;
+    double dt = 0;
+
+    sf::RenderWindow window (sf::VideoMode (W, H), "GAS EEEEEEE");
+    window.setFramerateLimit (600);
 
     while (window.isOpen()) {
         sf::Event event;
@@ -56,8 +67,7 @@ int main () {
         window.clear();
         rctr.Draw (window);
         window.draw (fps_txt);
+        test_btn.Draw (window);
         window.display();
     }
-
-    return 0;
 }

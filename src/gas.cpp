@@ -270,7 +270,7 @@ Reactor::Reactor (double min_x_, double min_y_, double max_x_, double max_y_, si
             Vec pos (min_x + std::rand() / (RAND_MAX / (max_x - min_x)),
                      min_y + std::rand() / (RAND_MAX / (max_y - min_y)));
 
-            Vec vel (std::rand() / (RAND_MAX / 400.), 0);
+            Vec vel (std::rand() / (RAND_MAX / 20.), 0);
             vel.RotateAroundZ (GetRandAngle());
 
             Molecule* mol = nullptr;
