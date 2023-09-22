@@ -29,7 +29,7 @@ class Button {
 
     explicit Button (double x_, double y_, double w_, double h_);
 
-    explicit Button ();
+    explicit Button();
 
     void SetPos (double x_, double y_);
 
@@ -65,6 +65,24 @@ class TextButton : public Button {
     virtual void Draw (sf::RenderWindow& window) override;
 };
 
+
+class ImageButton : public Button {
+    sf::Sprite sprite;
+
+    public:
+
+    explicit ImageButton (double x_, double y_, double w_, double h_, const sf::Texture& texture);
+
+    explicit ImageButton (double x_, double y_, double w_, double h_, const sf::Image& img);
+
+    void SetTexture (const sf::Texture& texture);
+
+    virtual void Press() override;
+
+    virtual void Release() override;
+
+    virtual void Draw (sf::RenderWindow& window) override;
+};
 
 class ButtonManager {
     std::vector<Button*> btns;

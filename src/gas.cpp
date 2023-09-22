@@ -11,15 +11,15 @@ Molecule::Molecule (const Vec& pos_, const Vec& velocity_, unsigned int mass_,
     radius (BASE_MOL_RADIUS + mass_)
     {}
 
-double Molecule::GetEnergy () const {
+double Molecule::GetEnergy() const {
     return mass * (velocity, velocity);
 }
 
-double Molecule::GetMomentum () const {
+double Molecule::GetMomentum() const {
     return mass * velocity.GetLen();
 }
 
-bool Molecule::CanReact () const {
+bool Molecule::CanReact() const {
     return dist_to_react <= 0;
 }
 
@@ -63,7 +63,7 @@ bool Intersect (Molecule* mol1, Molecule* mol2) {
 }
 
 
-Gas::~Gas () {
+Gas::~Gas() {
     for (size_t i = 0; i < molecules.size(); i++) {
         delete molecules[i];
     }
@@ -91,7 +91,7 @@ void Gas::MoveMolecules (double dt) {
     }
 }
 
-void Gas::CollideMolecules () {
+void Gas::CollideMolecules() {
     for (size_t i = 0; i < molecules.size(); i++) {
         if (!(molecules[i] -> CanReact())) continue;
         for (size_t j = i + 1; j < molecules.size(); j++) {
@@ -130,7 +130,7 @@ void Gas::ReactCircleCircle (size_t index1, size_t index2) {
     Vec newpos = (mol1 -> pos + mol2 -> pos) / 2;
     int newmass = mol1 -> mass + mol2 -> mass;
 
-    Vec newvel (std::sqrt((mol1 -> GetEnergy () + mol2 -> GetEnergy ()) / newmass), 0);
+    Vec newvel (std::sqrt((mol1 -> GetEnergy() + mol2 -> GetEnergy()) / newmass), 0);
     newvel.RotateAroundZ (GetRandAngle());
 
     Molecule* newmol = new SquareMol (newpos, newvel, newmass);
@@ -150,7 +150,7 @@ void Gas::ReactSquareCircle (size_t index1, size_t index2) {
 
     int newmass = mol1 -> mass + mol2 -> mass;
 
-    Vec newvel = !(mol1 -> velocity) * std::sqrt((mol1 -> GetEnergy () + mol2 -> GetEnergy ()) / newmass);
+    Vec newvel = !(mol1 -> velocity) * std::sqrt((mol1 -> GetEnergy() + mol2 -> GetEnergy()) / newmass);
 
     mol1 -> velocity = newvel;
     mol1 -> SetMass (newmass);
@@ -165,7 +165,7 @@ void Gas::ReactSquareSquare (size_t index1, size_t index2) {
     int num_of_new = mol1 -> mass + mol2 -> mass;
     Vec pos = (mol1 -> pos + mol2 -> pos) / 2;
 
-    Vec vel (std::sqrt((mol1 -> GetEnergy () + mol2 -> GetEnergy ()) / num_of_new), 0);
+    Vec vel (std::sqrt((mol1 -> GetEnergy() + mol2 -> GetEnergy()) / num_of_new), 0);
 
     double angle = 2 * M_PI / num_of_new;
     vel.RotateAroundZ (GetRandAngle());

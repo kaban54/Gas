@@ -9,27 +9,33 @@ const int H = 1080;
 
 const char* FONT_FILENAME = "fonts/font.ttf";
 
-void RunReactorApp ();
+void RunReactorApp();
 
-int main () {
-    RunReactorApp ();
+int main() {    
+    RunReactorApp();
     return 0;
 }
 
 
-void RunReactorApp () {
+void RunReactorApp() {
+
+    sf::Texture test_btn_texture;
+    test_btn_texture.loadFromFile ("images/suhariki.jpg");
+
     sf::Font font;
-    font.loadFromFile(FONT_FILENAME);
+    font.loadFromFile (FONT_FILENAME);
 
     sf::Text fps_txt ("", font, 20);
     fps_txt.setPosition (0, 0);
     fps_txt.setFillColor (sf::Color::Cyan);
-    char fps_str [8] = "";
+    char fps_str[8] = "";
 
-    Reactor rctr (50, 50, 650, 850, 100);
+    Reactor rctr (50, 50, 650, 850, 10);
 
     ButtonManager btns;
-    TextButton* test_btn = new TextButton (1000, 800, 200, 200, font, "ABCD");
+    Button* test_btn = new TextButton (1000, 800, 200, 200, font, "ABCD");
+    btns.AddButton (test_btn);
+    test_btn = new ImageButton (1000, 100, 300, 300, test_btn_texture);
     btns.AddButton (test_btn);
 
     sf::Clock clk;

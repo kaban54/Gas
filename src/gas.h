@@ -146,7 +146,7 @@ class Reactor {
 
     void ReflectOffWals();
 
-    void ReflectOffPiston ();
+    void ReflectOffPiston();
 
     void Draw (sf::RenderWindow& window) const;
 
