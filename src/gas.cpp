@@ -240,7 +240,7 @@ void Piston::Draw (sf::RenderWindow& window) const {
     window.draw (rect);
 }
 
-void Piston::ReflectMol (Molecule* mol) {
+double Piston::ReflectMol (Molecule* mol) {
     double v1 = mol -> velocity.y;
     double v2 = vy;
     double k = mass / mol -> mass;
@@ -250,6 +250,8 @@ void Piston::ReflectMol (Molecule* mol) {
     
     mol -> velocity.y = new_v1;
     mol -> pos.y = y + height + mol -> radius;
+
+    return mass * fabs (v2 - vy);
 }
 
 
@@ -335,7 +337,7 @@ void Reactor::ReflectOffPiston() {
     for (size_t i = 0; i < gas.molecules.size(); i++) {
         Molecule* mol = gas.molecules[i];
         if (mol -> pos.y - mol -> radius <= pist.y + pist.height)
-            pist.ReflectMol (mol);
+            pressure += pist.ReflectMol (mol);
     }
 }
 
@@ -349,7 +351,7 @@ void Reactor::DrawWalls (sf::RenderWindow& window) const {
     sf::RectangleShape box (sf::Vector2f(max_x - min_x, max_y - min_y));
     box.setPosition (min_x, min_y);
     box.setOutlineColor (sf::Color::White);
-    box.setFillColor (sf::Color::Black);
+    box.setFillColor (REACTOR_BG_COLOR);
     box.setOutlineThickness (REACTOR_WALLS_THIKNESS);
     window.draw (box);
 }
