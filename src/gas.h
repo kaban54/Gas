@@ -124,12 +124,13 @@ class Piston {
 };
 
 class Reactor {
-    double min_x;
-    double max_x;
-    double min_y;
-    double max_y;
+    const double min_x;
+    const double max_x;
+    const double min_y;
+    const double max_y;
     double walls_temp;
     Piston pist;
+    double pressure;
 
     public:
     Gas gas;
@@ -138,7 +139,7 @@ class Reactor {
 
     void Proceed (double dt);
 
-    double GetPressure() const;
+    double GetPressure();
 
     double GetTemperature() const;
 

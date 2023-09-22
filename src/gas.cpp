@@ -184,12 +184,12 @@ void Gas::ReactSquareSquare (size_t index1, size_t index2) {
     RemoveMolecule (index1);
 }
 
-double Gas::GetTemperature() const{
-    double temperature = 0;
+double Gas::GetTemperature() const {
+    double energy = 0;
     for (size_t i = 0; i < molecules.size(); i++)
-        temperature += molecules[i] -> GetEnergy();
+        energy += molecules[i] -> GetEnergy();
     
-    return temperature;
+    return energy / molecules.size();
 }
 
 void ReflectMolecules (Molecule* mol1, Molecule* mol2) {
@@ -259,6 +259,7 @@ Reactor::Reactor (double min_x_, double min_y_, double max_x_, double max_y_, si
     max_x (max_x_),
     max_y (max_y_),
     walls_temp (0),
+    pressure (0),
     pist (min_x_, min_y_, max_x_ - min_x_, PISTON_HEIGHT, min_y_, max_y_, PISTON_MASS),
     gas ()
     {
@@ -285,6 +286,12 @@ void Reactor::Proceed (double dt) {
     ReflectOffPiston();
 }
 
+double Reactor::GetPressure() {
+    double ret = pressure;
+    pressure = 0;
+    return ret;
+}
+
 double Reactor::GetTemperature() const {
     return gas.GetTemperature();
 }
@@ -295,19 +302,31 @@ void Reactor::ReflectOffWals() {
 
         if (mol -> pos.x + mol -> radius >= max_x) {
             mol -> pos.x = max_x - mol -> radius;
-            if (mol -> velocity.x > 0) mol -> velocity.x = -mol -> velocity.x;
+            if (mol -> velocity.x > 0) {
+                mol -> velocity.x = -mol -> velocity.x;
+                pressure += 2 * mol -> mass * fabs(mol -> velocity.x);
+            }
         }
         if (mol -> pos.x - mol -> radius <= min_x) {
             mol -> pos.x = min_x + mol -> radius;
-            if (mol -> velocity.x < 0) mol -> velocity.x = -mol -> velocity.x;
+            if (mol -> velocity.x < 0) {
+                mol -> velocity.x = -mol -> velocity.x;
+                pressure += 2 * mol -> mass * fabs(mol -> velocity.x);
+            }
         }
         if (mol -> pos.y + mol -> radius >= max_y) {
             mol -> pos.y = max_y - mol -> radius;
-            if (mol -> velocity.y > 0) mol -> velocity.y = -mol -> velocity.y;
+            if (mol -> velocity.y > 0) {
+                mol -> velocity.y = -mol -> velocity.y;
+                pressure += 2 * mol -> mass * fabs(mol -> velocity.y);
+            }
         }
         if (mol -> pos.y - mol -> radius <= min_y) {
             mol -> pos.y = min_y + mol -> radius;
-            if (mol -> velocity.y < 0) mol -> velocity.y = -mol -> velocity.y;
+            if (mol -> velocity.y < 0) {
+                mol -> velocity.y = -mol -> velocity.y;
+                pressure += 2 * mol -> mass * fabs(mol -> velocity.y);
+            }
         }
     }
 }
