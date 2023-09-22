@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <cstdlib>
 #include <string>
+#include <iostream>
 
 const size_t TXTBTN_BUFSIZE = 128;
 
@@ -34,6 +35,14 @@ class Button {
 
     void SetSize (double w_, double h_);
 
+    void SetState (double mousex, double mousey, bool mouse_pressed);
+
+    bool MouseOnButton (double mousex, double mousey) const;
+
+    virtual void Press() = 0;
+
+    virtual void Release() = 0;
+
     virtual void Draw (sf::RenderWindow& window) = 0;
 };
 
@@ -49,8 +58,26 @@ class TextButton : public Button {
 
     void SetFont (const sf::Font& font);
 
+    virtual void Press() override;
+
+    virtual void Release() override;
+
     virtual void Draw (sf::RenderWindow& window) override;
 };
 
+
+class ButtonManager {
+    std::vector<Button*> btns;
+
+    public:
+
+    ~ButtonManager();
+
+    void AddButton (Button *btn);
+
+    void DrawButtons (sf::RenderWindow& window);
+
+    void SetStates (double mousex, double mousey, bool mouse_pressed);
+};
 
 #endif

@@ -28,17 +28,19 @@ void RunReactorApp () {
 
     Reactor rctr (50, 50, 650, 850, 100);
 
-
-    
-
-    TextButton test_btn (1000, 800, 200, 200, font, "ABCD");
-
+    ButtonManager btns;
+    TextButton* test_btn = new TextButton (1000, 800, 200, 200, font, "ABCD");
+    btns.AddButton (test_btn);
 
     sf::Clock clk;
     double dt = 0;
 
     sf::RenderWindow window (sf::VideoMode (W, H), "GAS EEEEEEE");
     window.setFramerateLimit (600);
+
+    double mousex = 0;
+    double mousey = 0;
+    bool mouse_pressed = false;
 
     while (window.isOpen()) {
         sf::Event event;
@@ -55,7 +57,20 @@ void RunReactorApp () {
                 if (event.key.code == sf::Keyboard::W)
                     rctr.AddSquare (400);
             }
+
+            if (event.type == sf::Event::MouseMoved) {
+                mousex = event.mouseMove.x;
+                mousey = event.mouseMove.y;
+            }
+
+            if (event.type == sf::Event::MouseButtonPressed)
+                mouse_pressed = true;
+
+            if (event.type == sf::Event::MouseButtonReleased)
+                mouse_pressed = false;
         }
+
+        btns.SetStates (mousex, mousey, mouse_pressed);
 
         dt = clk.restart().asSeconds();
 
@@ -66,8 +81,8 @@ void RunReactorApp () {
 
         window.clear();
         rctr.Draw (window);
+        btns.DrawButtons (window);
         window.draw (fps_txt);
-        test_btn.Draw (window);
         window.display();
     }
 }

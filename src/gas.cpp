@@ -63,12 +63,8 @@ bool Intersect (Molecule* mol1, Molecule* mol2) {
 }
 
 
-Gas::Gas ():
-    molecules ()
-    {}
-
 Gas::~Gas () {
-    for (int i = 0; i < molecules.size(); i++) {
+    for (size_t i = 0; i < molecules.size(); i++) {
         delete molecules[i];
     }
 }
@@ -90,7 +86,7 @@ void Gas::DrawMolecules (sf::RenderWindow& window) const {
 }
 
 void Gas::MoveMolecules (double dt) {
-    for (int i = 0; i < molecules.size(); i++) {
+    for (size_t i = 0; i < molecules.size(); i++) {
         molecules[i] -> Move (dt);
     }
 }

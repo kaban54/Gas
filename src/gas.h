@@ -75,8 +75,6 @@ class Gas {
     public:
     std::vector<Molecule*> molecules;
 
-    explicit Gas ();
-
     ~Gas();
 
     void AddMolecule (Molecule *mol);
@@ -102,6 +100,7 @@ class Gas {
     double GetTemperature() const;
 };
 
+
 class Piston {
     const int mass;
     const double width;
@@ -123,6 +122,7 @@ class Piston {
 
     double ReflectMol (Molecule* mol);
 };
+
 
 class Reactor {
     const double min_x;
