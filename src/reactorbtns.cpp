@@ -25,13 +25,13 @@ void AddSquareBtn::Press() {
 }
 
 
-HeatWallsBtn::HeatWallsBtn (double x_, double y_, double w_, double h_, Reactor* rctr_, double temp_change_):
+HeatWallsBtn::HeatWallsBtn (double x_, double y_, double w_, double h_, Reactor* rctr_, double temp_change_v_):
     ReactorBtn (x_, y_, w_, h_, rctr_),
-    temp_change (temp_change_)
+    temp_change_v (temp_change_v_)
     {}
 
-void HeatWallsBtn::Release() {
-    rctr -> HeatWalls (temp_change);
+void HeatWallsBtn::Pressed (double dt) {
+    rctr -> HeatWalls (dt * temp_change_v);
 }
 
 

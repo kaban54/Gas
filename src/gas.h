@@ -141,7 +141,7 @@ class Reactor {
     const double max_x;
     const double min_y;
     const double max_y;
-    int walls_temp;
+    double walls_temp;
     Piston pist;
     double pressure;
 
@@ -172,7 +172,7 @@ class Reactor {
 
     void AddSquare (double vel);
 
-    void HeatWalls (int temp_change);
+    void HeatWalls (double temp_change);
 
     void MovePiston (double dy);
 

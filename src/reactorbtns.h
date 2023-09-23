@@ -36,16 +36,16 @@ class AddSquareBtn : public ReactorBtn {
 
 
 class HeatWallsBtn : public ReactorBtn {
-    double temp_change;
+    double temp_change_v;
 
     public:
-    explicit HeatWallsBtn (double x_, double y_, double w_, double h_, Reactor* rctr_, double temp_change_);
+    explicit HeatWallsBtn (double x_, double y_, double w_, double h_, Reactor* rctr_, double temp_change_v_);
 
     virtual void Press() override {}
 
-    virtual void Pressed (double dt) override {}
+    virtual void Pressed (double dt) override;
 
-    virtual void Release() override;
+    virtual void Release() override {};
 };
 
 

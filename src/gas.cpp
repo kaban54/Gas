@@ -416,7 +416,7 @@ void Reactor::AddSquare (double vel) {
     gas.AddMolecule (mol);
 }
 
-void Reactor::HeatWalls (int temp_change) {
+void Reactor::HeatWalls (double temp_change) {
     walls_temp += temp_change;
 }
 
