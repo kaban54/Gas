@@ -83,6 +83,8 @@ void RunReactorApp() {
                     rctr.AddCircle (400);
                 if (event.key.code == sf::Keyboard::W)
                     rctr.AddSquare (400);
+                if (event.key.code == sf::Keyboard::E)
+                    rctr.SetWallsTemp (0);
             }
 
             if (event.type == sf::Event::MouseMoved) {

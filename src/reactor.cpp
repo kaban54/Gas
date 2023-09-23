@@ -449,3 +449,7 @@ void Reactor::LockPiston() {
 void Reactor::UnlockPiston() {
     pist.Unlock();
 }
+
+void Reactor::SetWallsTemp (double temp) {
+    walls_temp = temp;
+}

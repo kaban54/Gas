@@ -183,6 +183,8 @@ class Reactor {
     void LockPiston();
 
     void UnlockPiston();
+
+    void SetWallsTemp (double temp);
 };
 
 
