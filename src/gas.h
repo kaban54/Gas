@@ -112,6 +112,7 @@ class Piston {
     const double min_y;
     const double max_y;
     const double x;
+    bool locked;
 
     public:
     const double height;
@@ -126,6 +127,10 @@ class Piston {
     void Draw (sf::RenderWindow& window) const;
 
     double ReflectMol (Molecule* mol);
+
+    void Lock();
+
+    void Unlock();
 };
 
 
@@ -172,6 +177,10 @@ class Reactor {
     sf::Color GetWallsColor() const;
 
     sf::Color GetBgColor() const;
+
+    void LockPiston();
+
+    void UnlockPiston();
 };
 
 

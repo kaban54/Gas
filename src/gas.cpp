@@ -227,10 +227,15 @@ Piston::Piston (double x_, double y_, double width_, double height_,
     min_y (min_y_),
     max_y (max_y_ - height_ - 4 * BASE_MOL_RADIUS),
     mass (mass_),
-    vy (vy_)
+    vy (vy_),
+    locked (false)
     {}
 
 void Piston::Move (double dt) {
+    if (locked) {
+        vy = 0;
+        return;
+    }
     if (y > max_y) {
         y = max_y;
         if (vy > 0) vy = 0;
@@ -261,9 +266,18 @@ double Piston::ReflectMol (Molecule* mol) {
     mol -> velocity.y = new_v1;
     mol -> pos.y = y + height + mol -> radius;
 
+    if (locked) vy = 0;
+
     return mass * fabs (v2 - vy);
 }
 
+void Piston::Lock() {
+    locked = true;
+}
+
+void Piston::Unlock() {
+    locked = false;
+}
 
 Reactor::Reactor (double min_x_, double min_y_, double max_x_, double max_y_, size_t num_of_molecules):
     min_x (min_x_),
@@ -420,4 +434,12 @@ sf::Color Reactor::GetBgColor() const {
 
     if (walls_temp < 0) return sf::Color (192 + 12 * walls_temp, 192 + 6 * walls_temp, 192);
     else                return sf::Color (192, 192 - 6 * walls_temp, 192 - 6 * walls_temp);
+}
+
+void Reactor::LockPiston() {
+    pist.Lock();
+}
+
+void Reactor::UnlockPiston() {
+    pist.Unlock();
 }
