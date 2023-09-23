@@ -6,8 +6,8 @@ SRCDIR = src/
 
 all: gas
 
-gas: obj/main.o obj/gas.o obj/vec.o obj/buttons.o
-	$(CC) -o gas obj/main.o obj/gas.o obj/vec.o obj/buttons.o $(SFMLFLAGS)
+gas: obj/main.o obj/gas.o obj/vec.o obj/buttons.o obj/reactorbtns.o
+	$(CC) -o gas obj/main.o obj/gas.o obj/vec.o obj/buttons.o obj/reactorbtns.o $(SFMLFLAGS)
 
 $(OBJDIR)%.o: $(SRCDIR)%.cpp
 	$(CC) -c $(CFLAGS) $< -o $@

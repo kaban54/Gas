@@ -75,14 +75,6 @@ void TextButton::SetFont (const sf::Font& font) {
     text.setFont (font);
 }
 
-void TextButton::Press() {
-    std::cout << "btn pressed!\n";
-}
-
-void TextButton::Release() {
-    std::cout << "btn released!\n";
-}
-
 void TextButton::Draw (sf::RenderWindow& window) {
     sf::RectangleShape rect (sf::Vector2f (w, h));
     rect.setFillColor (sf::Color (255 - state * 80, 255 - state * 80, 255 - state * 80)); // TEST
@@ -94,39 +86,43 @@ void TextButton::Draw (sf::RenderWindow& window) {
 }
 
 
-ImageButton::ImageButton (double x_, double y_, double w_, double h_, const sf::Texture& texture):
-    Button (x_, y_, w_, h_),
-    sprite (texture)
+ImageButton::ImageButton (double x_, double y_, double w_, double h_, const sf::Texture* textures_[4]):
+    Button (x_, y_, w_, h_)
     {
-        sprite.setPosition (x, y);
-        sprite.setScale (w / texture.getSize().x, h / texture.getSize().y);
+        for (size_t i = 0; i < 4; i++) {
+            textures[i] = textures_[i];
+        }
     }
 
-ImageButton::ImageButton (double x_, double y_, double w_, double h_, const sf::Image& img):
+ImageButton::ImageButton (double x_, double y_, double w_, double h_):
     Button (x_, y_, w_, h_),
-    sprite ()
-    {
-        sf::Texture texture;
-        texture.loadFromImage (img);
-        sprite.setTexture (texture);
-        sprite.setPosition (x, y);
-        sprite.setScale (w / texture.getSize().x, h / texture.getSize().y);
+    textures ()
+    {}
+
+ImageButton::ImageButton():
+    Button (),
+    textures ()
+    {}
+
+void ImageButton::SetTextures (const sf::Texture* textures_[4]) {
+    for (size_t i = 0; i < 4; i++) {
+        textures[i] = textures_[i];
     }
-
-void ImageButton::SetTexture (const sf::Texture& texture) {
-    sprite.setTexture (texture);
-    sprite.setScale (w / texture.getSize().x, h / texture.getSize().y);
-}
-
-void ImageButton::Press() {
-    std::cout << "btn pressed!\n";
-}
-
-void ImageButton::Release() {
-    std::cout << "btn released!\n";
 }
 
 void ImageButton::Draw (sf::RenderWindow& window) {
+    sf::Sprite sprite;
+    sf::Texture texture;
+
+    if (textures[state] == nullptr) {
+        sf::Image white_img;
+        white_img.create (1, 1, sf::Color::White);
+        texture.loadFromImage (white_img);
+    }
+    else texture = *(textures[state]);
+
+    sprite.setTexture (texture);
+    sprite.setScale (w / texture.getSize().x, h / texture.getSize().y);
     sprite.setPosition (x, y);
     window.draw (sprite);
 }

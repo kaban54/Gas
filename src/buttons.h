@@ -58,28 +58,22 @@ class TextButton : public Button {
 
     void SetFont (const sf::Font& font);
 
-    virtual void Press() override;
-
-    virtual void Release() override;
-
     virtual void Draw (sf::RenderWindow& window) override;
 };
 
 
 class ImageButton : public Button {
-    sf::Sprite sprite;
+    const sf::Texture* textures[4];
 
     public:
 
-    explicit ImageButton (double x_, double y_, double w_, double h_, const sf::Texture& texture);
+    explicit ImageButton (double x_, double y_, double w_, double h_, const sf::Texture* textures_[4]);
 
-    explicit ImageButton (double x_, double y_, double w_, double h_, const sf::Image& img);
+    explicit ImageButton (double x_, double y_, double w_, double h_);
 
-    void SetTexture (const sf::Texture& texture);
+    explicit ImageButton();
 
-    virtual void Press() override;
-
-    virtual void Release() override;
+    void SetTextures (const sf::Texture* textures_[4]);
 
     virtual void Draw (sf::RenderWindow& window) override;
 };

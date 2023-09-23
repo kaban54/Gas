@@ -1,5 +1,6 @@
 #include "gas.h"
 #include "buttons.h"
+#include "reactorbtns.h"
 #include <cmath>
 #include <iostream>
 #include <stdio.h>
@@ -11,7 +12,7 @@ const char* FONT_FILENAME = "fonts/font.ttf";
 
 void RunReactorApp();
 
-int main() {    
+int main() {
     RunReactorApp();
     return 0;
 }
@@ -30,13 +31,13 @@ void RunReactorApp() {
     fps_txt.setFillColor (sf::Color::Cyan);
     char fps_str[8] = "";
 
-    Reactor rctr (50, 50, 650, 850, 10);
+    Reactor rctr (70, 70, 670, 870, 0);
 
     ButtonManager btns;
-    Button* test_btn = new TextButton (1000, 800, 200, 200, font, "ABCD");
-    btns.AddButton (test_btn);
-    test_btn = new ImageButton (1000, 100, 300, 300, test_btn_texture);
-    btns.AddButton (test_btn);
+    btns.AddButton (new AddCircleBtn (80 , 925, 100, 100, &rctr));
+    btns.AddButton (new AddCircleBtn (240, 925, 100, 100, &rctr));
+    btns.AddButton (new AddCircleBtn (400, 925, 100, 100, &rctr));
+    btns.AddButton (new AddSquareBtn (560, 925, 100, 100, &rctr));
 
     sf::Clock clk;
     double dt = 0;
@@ -85,7 +86,7 @@ void RunReactorApp() {
         
         rctr.Proceed (dt);
 
-        window.clear();
+        window.clear(sf::Color (192, 192, 192));
         rctr.Draw (window);
         btns.DrawButtons (window);
         window.draw (fps_txt);
