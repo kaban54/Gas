@@ -1,4 +1,4 @@
-#include "gas.h"
+#include "reactor.h"
 #include <stdlib.h>
 
 Molecule::Molecule (const Vec& pos_, const Vec& velocity_, unsigned int mass_,

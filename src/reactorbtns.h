@@ -1,7 +1,7 @@
 #ifndef REACTORBTNS_H
 #define REACTORBTNS_H
 
-#include "gas.h"
+#include "reactor.h"
 #include "buttons.h"
 
 class ReactorBtn : public ImageButton {

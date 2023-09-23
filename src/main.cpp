@@ -1,4 +1,4 @@
-#include "gas.h"
+#include "reactor.h"
 #include "buttons.h"
 #include "reactorbtns.h"
 #include "plot.h"

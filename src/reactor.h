@@ -1,5 +1,5 @@
-#ifndef GAS_H
-#define GAS_H
+#ifndef REACTOR_H
+#define REACTOR_H
 
 #include "vec.h"
 #include <SFML/Graphics.hpp>
