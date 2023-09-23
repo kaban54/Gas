@@ -16,7 +16,7 @@ const sf::Color REACTOR_BG_COLOR = sf::Color (128, 128, 128);
 
 const double MIN_REACTION_ENERGY = 320000;
 const double GRAV_ACC = 100;
-const int PISTON_MASS = 1000;
+const int PISTON_MASS = 10000;
 
 const double PISTON_HEIGHT = 20;
 const double REACTOR_WALLS_THIKNESS = 15;
@@ -98,6 +98,10 @@ class Gas {
     void ReactSquareSquare (size_t index1, size_t index2);
 
     double GetTemperature() const;
+
+    size_t GetNumOfCircles() const;
+
+    size_t GetNumOfSquares() const;
 };
 
 
@@ -143,6 +147,10 @@ class Reactor {
     double GetPressure();
 
     double GetTemperature() const;
+
+    size_t GetNumOfCircles() const;
+
+    size_t GetNumOfSquares() const;
 
     void ReflectOffWals();
 

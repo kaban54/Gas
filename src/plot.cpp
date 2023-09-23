@@ -71,11 +71,17 @@ void Plot::Draw (sf::RenderWindow& window) {
     pnt.setFillColor (plot_color);
     for (size_t i = 0; i < points.size(); i++) {
         double f = points[i].f;
+        if (f > max_f) continue;
         double t = points[i].t - t0;
         if (t < 0) t += max_t;
-        pnt.setPosition (x + w * (t / max_t), y + h * (1 - f / max_f));
+        pnt.setPosition (x + w * (t / max_t) - 2, y + h * (1 - f / max_f) - 2);
         window.draw (pnt);
     }
+
+    sf::RectangleShape sep (sf::Vector2f (4, h));
+    sep.setFillColor (sf::Color::White);
+    sep.setPosition (x + w * (cur_t - t0) / max_t, y);
+    window.draw (sep);
 }
 
 void Plot::AddPoint (double val, double dt) {

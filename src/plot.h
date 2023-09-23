@@ -39,6 +39,8 @@ class Plot {
     sf::Color axis_color;
     sf::Color txt_color;
 
+    bool connect_points;
+
     std::deque<Pair> points;
 
     public:

@@ -12,7 +12,7 @@ AddCircleBtn::AddCircleBtn (double x_, double y_, double w_, double h_, Reactor*
     {}
 
 void AddCircleBtn::Press() {
-    rctr -> AddCircle (100);
+    rctr -> AddCircle (400);
 }
 
 
@@ -21,7 +21,7 @@ AddSquareBtn::AddSquareBtn (double x_, double y_, double w_, double h_, Reactor*
     {}
 
 void AddSquareBtn::Press() {
-    rctr -> AddSquare (100);
+    rctr -> AddSquare (400);
 }
 
 

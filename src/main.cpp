@@ -32,7 +32,7 @@ void RunReactorApp() {
     fps_txt.setFillColor (sf::Color::Cyan);
     char fps_str[8] = "";
 
-    Reactor rctr (70, 70, 670, 870, 50);
+    Reactor rctr (70, 70, 670, 870, 100);
 
     ButtonManager btns;
     btns.AddButton (new AddCircleBtn (80 , 925, 100, 100, &rctr));
@@ -42,7 +42,10 @@ void RunReactorApp() {
     btns.AddButton (new AcceleratePistonBtn (725, 80 , 100, 100, &rctr, -100));
     btns.AddButton (new AcceleratePistonBtn (725, 240, 100, 100, &rctr,  100));
 
-    Plot testplt (1000, 100, 900, 200, 10, 20);
+    Plot temp_graph   (1000, 35 , 900, 180, 10, 20, 1, 4);
+    Plot pres_graph   (1000, 305, 900, 180, 10, 10, 1, 2);
+    Plot circle_graph (1000, 575, 900, 180, 10, 200, 1, 20);
+    Plot square_graph (1000, 845, 900, 180, 10, 200, 1, 20);
 
     sf::Clock plot_clk;
 
@@ -93,15 +96,20 @@ void RunReactorApp() {
         
         rctr.Proceed (dt);
 
-        if (plot_clk.getElapsedTime().asSeconds() >= 0.01) {
-            testplt.AddPoint (rctr.GetTemperature() / 1e6, plot_clk.restart().asSeconds());
-        }
+        temp_graph.AddPoint (rctr.GetTemperature(), dt);
+        circle_graph.AddPoint (rctr.GetNumOfCircles(), dt);
+        square_graph.AddPoint (rctr.GetNumOfSquares(), dt);
 
+        if (plot_clk.getElapsedTime().asSeconds() >= 0.2) {
+            double plot_dt = plot_clk.restart().asSeconds();
+            pres_graph.AddPoint (rctr.GetPressure() / plot_dt, plot_dt);
+        }
         window.clear(sf::Color (192, 192, 192));
         rctr.Draw (window);
-
-        testplt.Draw (window);
-
+        temp_graph.Draw (window);
+        pres_graph.Draw (window);
+        circle_graph.Draw (window);
+        square_graph.Draw (window);
         btns.DrawButtons (window);
         window.draw (fps_txt);
         window.display();

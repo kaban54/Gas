@@ -185,7 +185,21 @@ double Gas::GetTemperature() const {
     for (size_t i = 0; i < molecules.size(); i++)
         energy += molecules[i] -> GetEnergy();
     
-    return energy / molecules.size();
+    return energy / molecules.size() / 1e6;
+}
+
+size_t Gas::GetNumOfCircles() const {
+    size_t count = 0;
+    for (size_t i = 0; i < molecules.size(); i++)
+        if (molecules[i] -> type == MOLECULE_CIRCLE) count++;
+    return count;
+}
+
+size_t Gas::GetNumOfSquares() const {
+    size_t count = 0;
+    for (size_t i = 0; i < molecules.size(); i++)
+        if (molecules[i] -> type == MOLECULE_SQUARE) count++;
+    return count;
 }
 
 void ReflectMolecules (Molecule* mol1, Molecule* mol2) {
@@ -266,7 +280,7 @@ Reactor::Reactor (double min_x_, double min_y_, double max_x_, double max_y_, si
             Vec pos (min_x + std::rand() / (RAND_MAX / (max_x - min_x)),
                      min_y + std::rand() / (RAND_MAX / (max_y - min_y)));
 
-            Vec vel (std::rand() / (RAND_MAX / 20.), 0);
+            Vec vel (std::rand() / (RAND_MAX / 200.), 0);
             vel.RotateAroundZ (GetRandAngle());
 
             Molecule* mol = nullptr;
@@ -287,11 +301,19 @@ void Reactor::Proceed (double dt) {
 double Reactor::GetPressure() {
     double ret = pressure;
     pressure = 0;
-    return ret;
+    return ret / 1e6;
 }
 
 double Reactor::GetTemperature() const {
     return gas.GetTemperature();
+}
+
+size_t Reactor::GetNumOfCircles() const {
+    return gas.GetNumOfCircles();
+}
+
+size_t Reactor::GetNumOfSquares() const {
+    return gas.GetNumOfSquares();
 }
 
 void Reactor::ReflectOffWals() {
