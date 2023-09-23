@@ -31,9 +31,9 @@ class Button {
 
     explicit Button();
 
-    inline void SetPos (double x_, double y_);
+    void SetPos (double x_, double y_);
 
-    inline void SetSize (double w_, double h_);
+    void SetSize (double w_, double h_);
 
     void SetState (double mousex, double mousey, bool mouse_pressed);
 
@@ -54,9 +54,9 @@ class TextButton : public Button {
 
     explicit TextButton (double x_, double y_, double w_, double h_, const sf::Font& font, const char* str = "");
 
-    inline void SetText (const char* str);
+    void SetText (const char* str);
 
-    inline void SetFont (const sf::Font& font);
+    void SetFont (const sf::Font& font);
 
     virtual void Draw (sf::RenderWindow& window) override;
 };
@@ -85,7 +85,7 @@ class ButtonManager {
 
     ~ButtonManager();
 
-    inline void AddButton (Button *btn);
+    void AddButton (Button *btn);
 
     void DrawButtons (sf::RenderWindow& window);
 

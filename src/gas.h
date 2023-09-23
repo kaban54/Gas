@@ -38,17 +38,17 @@ class Molecule {
     explicit Molecule (const Vec& pos_, const Vec& velocity_, unsigned int mass_,
                        MoleculeTypes type_, double dist_to_react_);
 
-    inline double GetEnergy() const;
+    double GetEnergy() const;
 
-    inline double GetMomentum() const;
+    double GetMomentum() const;
 
-    inline bool CanReact() const;
+    bool CanReact() const;
 
     virtual void Draw (sf::RenderWindow& window) const = 0;
     
     void Move (double dt);
 
-    inline void SetMass (unsigned int new_mass);
+    void SetMass (unsigned int new_mass);
 };
 
 
@@ -77,7 +77,7 @@ class Gas {
 
     ~Gas();
 
-    inline void AddMolecule (Molecule *mol);
+    void AddMolecule (Molecule *mol);
 
     void RemoveMolecule (size_t index);
 
@@ -144,13 +144,13 @@ class Reactor {
 
     void Proceed (double dt);
 
-    inline double GetPressure();
+    double GetPressure();
 
-    inline double GetTemperature() const;
+    double GetTemperature() const;
 
-    inline size_t GetNumOfCircles() const;
+    size_t GetNumOfCircles() const;
 
-    inline size_t GetNumOfSquares() const;
+    size_t GetNumOfSquares() const;
 
     void ReflectOffWals();
 
@@ -164,9 +164,9 @@ class Reactor {
 
     void AddSquare (double vel);
 
-    inline void HeatWalls (double temp_change);
+    void HeatWalls (double temp_change);
 
-    inline void AcceleratePiston (double vel_change);
+    void AcceleratePiston (double vel_change);
 };
 
 
