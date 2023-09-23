@@ -225,7 +225,7 @@ Piston::Piston (double x_, double y_, double width_, double height_,
     width (width_),
     height (height_),
     min_y (min_y_),
-    max_y (max_y_ - height_ - 2 * BASE_MOL_RADIUS),
+    max_y (max_y_ - height_ - 4 * BASE_MOL_RADIUS),
     mass (mass_),
     vy (vy_)
     {}
@@ -376,8 +376,8 @@ void Reactor::Draw (sf::RenderWindow& window) const {
 void Reactor::DrawWalls (sf::RenderWindow& window) const {
     sf::RectangleShape box (sf::Vector2f(max_x - min_x, max_y - min_y));
     box.setPosition (min_x, min_y);
-    box.setOutlineColor (sf::Color::White);
-    box.setFillColor (REACTOR_BG_COLOR);
+    box.setOutlineColor (GetWallsColor());
+    box.setFillColor (GetBgColor());
     box.setOutlineThickness (REACTOR_WALLS_THIKNESS);
     window.draw (box);
 }
@@ -402,4 +402,22 @@ void Reactor::HeatWalls (int temp_change) {
 
 void Reactor::AcceleratePiston (double vel_change) {
     pist.vy += vel_change;
+}
+
+sf::Color Reactor::GetWallsColor() const {
+    if (walls_temp ==   0) return sf::Color (255, 255, 255);
+    if (walls_temp <= -16) return sf::Color (  0, 127, 255);
+    if (walls_temp >=  16) return sf::Color (255, 127, 127);
+
+    if (walls_temp < 0) return sf::Color (255 + 16 * walls_temp, 255 + 8 * walls_temp, 255);
+    else                return sf::Color (255, 255 - 8 * walls_temp, 255 - 8 * walls_temp);
+}
+
+sf::Color Reactor::GetBgColor() const {
+    if (walls_temp ==   0) return sf::Color (192, 192, 192);
+    if (walls_temp <= -16) return sf::Color (  0,  96, 192);
+    if (walls_temp >=  16) return sf::Color (192,  96,  96);
+
+    if (walls_temp < 0) return sf::Color (192 + 12 * walls_temp, 192 + 6 * walls_temp, 192);
+    else                return sf::Color (192, 192 - 6 * walls_temp, 192 - 6 * walls_temp);
 }

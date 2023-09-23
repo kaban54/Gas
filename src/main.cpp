@@ -61,11 +61,10 @@ void RunReactorApp() {
     btn -> SetTextures (&(textures[20]), &(textures[21]), &(textures[22]), nullptr);
     btns.AddButton (btn);
 
-
-    Plot temp_graph   (900, 35 , 1000, 180, 10, 20, 1, 4);
-    Plot pres_graph   (900, 305, 1000, 180, 10, 10, 1, 2);
-    Plot circle_graph (900, 575, 1000, 180, 10, 200, 1, 40);
-    Plot square_graph (900, 845, 1000, 180, 10, 200, 1, 40);
+    Plot temp_graph   (950, 35 , 950, 180, 10, 10, 1, 4);
+    Plot pres_graph   (950, 305, 950, 180, 10,  5, 1, 2);
+    Plot circle_graph (950, 575, 950, 180, 10, 200, 1, 40);
+    Plot square_graph (950, 845, 950, 180, 10, 200, 1, 40);
 
     temp_graph.SetPlotColor (sf::Color (255, 128, 0));
     circle_graph.SetPlotColor (CIRCLE_MOL_COLOR);
@@ -134,7 +133,7 @@ void RunReactorApp() {
             pres_graph.AddPoint (rctr.GetPressure() / plot_dt, plot_dt);
         }
 
-        window.clear(sf::Color (160, 160, 160));
+        window.clear(sf::Color (128, 128, 128));
         
         rctr.Draw (window);
         

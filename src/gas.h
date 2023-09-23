@@ -11,15 +11,14 @@ const double BASE_MOL_RADIUS = 5;
 
 const sf::Color CIRCLE_MOL_COLOR = sf::Color::Red;
 const sf::Color SQUARE_MOL_COLOR = sf::Color::Yellow;
-const sf::Color     PISTON_COLOR = sf::Color::Blue;
-const sf::Color REACTOR_BG_COLOR = sf::Color (128, 128, 128);
+const sf::Color     PISTON_COLOR = sf::Color (0, 128, 0);
 
 const double MIN_REACTION_ENERGY = 320000;
 const double GRAV_ACC = 100;
-const int PISTON_MASS = 10000;
+const int PISTON_MASS = 1000;
 
-const double PISTON_HEIGHT = 20;
-const double REACTOR_WALLS_THIKNESS = 15;
+const double PISTON_HEIGHT = 50;
+const double REACTOR_WALLS_THIKNESS = 25;
 
 enum MoleculeTypes {
     MOLECULE_CIRCLE = 0,
@@ -169,6 +168,11 @@ class Reactor {
     void HeatWalls (int temp_change);
 
     void AcceleratePiston (double vel_change);
+
+    sf::Color GetWallsColor() const;
+
+    sf::Color GetBgColor() const;
 };
+
 
 #endif
