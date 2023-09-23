@@ -94,3 +94,19 @@ void Plot::AddPoint (double val, double dt) {
 
     //std::cout << "cur_t = " << cur_t << "; t0 = " << t0 << ";\n";
 }
+
+void Plot::SetBGColor (const sf::Color& clr) {
+    bg_color = clr;
+}
+
+void Plot::SetPlotColor (const sf::Color& clr) {
+    plot_color = clr;
+}
+
+void Plot::SetAxisColor (const sf::Color& clr) {
+    axis_color = clr;
+}
+
+void Plot::SetTxtColor (const sf::Color& clr) {
+    txt_color = clr;
+}

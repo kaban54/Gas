@@ -53,6 +53,11 @@ class Plot {
     void Draw (sf::RenderWindow& window);
 
     void AddPoint (double val, double dt);
+
+    inline void SetBGColor   (const sf::Color& clr);
+    inline void SetPlotColor (const sf::Color& clr);
+    inline void SetAxisColor (const sf::Color& clr);
+    inline void SetTxtColor  (const sf::Color& clr);
 };
 
 
