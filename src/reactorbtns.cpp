@@ -35,11 +35,19 @@ void HeatWallsBtn::Release() {
 }
 
 
-AcceleratePistonBtn::AcceleratePistonBtn (double x_, double y_, double w_, double h_, Reactor* rctr_, double vel_change_):
+MovePistonBtn::MovePistonBtn (double x_, double y_, double w_, double h_, Reactor* rctr_, double vel_):
     ReactorBtn (x_, y_, w_, h_, rctr_),
-    vel_change (vel_change_)
+    vel (vel_)
     {}
 
-void AcceleratePistonBtn::Release() {
-    rctr -> AcceleratePiston (vel_change);
+void MovePistonBtn::Press() {
+    rctr -> LockPiston();
+}
+
+void MovePistonBtn::Pressed (double dt) {
+    rctr -> MovePiston (vel * dt);
+}
+
+void MovePistonBtn::Release() {
+    rctr -> UnlockPiston();
 }

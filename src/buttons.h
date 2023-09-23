@@ -35,11 +35,13 @@ class Button {
 
     void SetSize (double w_, double h_);
 
-    void SetState (double mousex, double mousey, bool mouse_pressed);
+    void SetState (double mousex, double mousey, bool mouse_pressed, double dt);
 
     bool MouseOnButton (double mousex, double mousey) const;
 
     virtual void Press() = 0;
+
+    virtual void Pressed(double dt) = 0;
 
     virtual void Release() = 0;
 
@@ -87,7 +89,7 @@ class ButtonManager {
 
     void DrawButtons (sf::RenderWindow& window);
 
-    void SetStates (double mousex, double mousey, bool mouse_pressed);
+    void SetStates (double mousex, double mousey, bool mouse_pressed, double dt);
 };
 
 #endif

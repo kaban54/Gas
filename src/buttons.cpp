@@ -26,7 +26,7 @@ void Button::SetSize (double w_, double h_) {
     h = h_;
 }
 
-void Button::SetState (double mousex, double mousey, bool mouse_pressed) {
+void Button::SetState (double mousex, double mousey, bool mouse_pressed, double dt) {
     if (state == BTN_DISABLED) return;
 
     if (MouseOnButton (mousex, mousey)) {
@@ -35,6 +35,7 @@ void Button::SetState (double mousex, double mousey, bool mouse_pressed) {
                 state = BTN_PRESSED;
                 Press();
             }
+            else Pressed (dt);
         }
         else {
             if (state == BTN_NORMAL)
@@ -137,8 +138,8 @@ void ButtonManager::DrawButtons (sf::RenderWindow& window) {
     }
 }
 
-void ButtonManager::SetStates (double mousex, double mousey, bool mouse_pressed) {
+void ButtonManager::SetStates (double mousex, double mousey, bool mouse_pressed, double dt) {
     for (size_t i = 0; i < btns.size(); i++) {
-        btns[i] -> SetState (mousex, mousey, mouse_pressed);
+        btns[i] -> SetState (mousex, mousey, mouse_pressed, dt);
     }
 }

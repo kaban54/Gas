@@ -97,9 +97,9 @@ void RunReactorApp() {
                 mouse_pressed = false;
         }
 
-        btns.SetStates (mousex, mousey, mouse_pressed);
-
         dt = clk.restart().asSeconds();
+
+        btns.SetStates (mousex, mousey, mouse_pressed, dt);
 
         frame_counter++;
         if (fps_clk.getElapsedTime().asSeconds() >= 1) {
@@ -180,11 +180,11 @@ void SetButtons (ButtonManager& btns, Reactor* rctr, sf::Texture* const textures
     btn -> SetTextures (&(textures[12]), &(textures[13]), &(textures[14]), nullptr);
     btns.AddButton (btn);
 
-    btn = new AcceleratePistonBtn (725, 80 , 100, 100, rctr, -100);
+    btn = new MovePistonBtn (725, 80 , 100, 100, rctr, -100);
     btn -> SetTextures (&(textures[16]), &(textures[17]), &(textures[18]), nullptr);
     btns.AddButton (btn);
 
-    btn = new AcceleratePistonBtn (725, 240, 100, 100, rctr,  100);
+    btn = new MovePistonBtn (725, 240, 100, 100, rctr,  100);
     btn -> SetTextures (&(textures[20]), &(textures[21]), &(textures[22]), nullptr);
     btns.AddButton (btn);
 }

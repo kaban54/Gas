@@ -17,6 +17,8 @@ class AddCircleBtn : public ReactorBtn {
 
     virtual void Press() override;
 
+    virtual void Pressed (double dt) override {}
+
     virtual void Release() override {}
 };
 
@@ -26,6 +28,8 @@ class AddSquareBtn : public ReactorBtn {
     explicit AddSquareBtn (double x_, double y_, double w_, double h_, Reactor* rctr_);
 
     virtual void Press() override;
+
+    virtual void Pressed (double dt) override {}
 
     virtual void Release() override {}
 };
@@ -39,17 +43,21 @@ class HeatWallsBtn : public ReactorBtn {
 
     virtual void Press() override {}
 
+    virtual void Pressed (double dt) override {}
+
     virtual void Release() override;
 };
 
 
-class AcceleratePistonBtn : public ReactorBtn {
-    double vel_change;
+class MovePistonBtn : public ReactorBtn {
+    double vel;
 
     public:
-    explicit AcceleratePistonBtn (double x_, double y_, double w_, double h_, Reactor* rctr_, double vel_change_);
+    explicit MovePistonBtn (double x_, double y_, double w_, double h_, Reactor* rctr_, double vel_);
 
-    virtual void Press() override {}
+    virtual void Press() override;
+
+    virtual void Pressed (double dt) override;
 
     virtual void Release() override;
 };

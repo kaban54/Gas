@@ -122,7 +122,9 @@ class Piston {
     explicit Piston (double x_, double y_, double width_, double height_,
                      double min_y_, double max_y_, int mass_, double vy_ = 0);
 
-    void Move (double dt);
+    void Fall (double dt);
+
+    void Move (double dy);
 
     void Draw (sf::RenderWindow& window) const;
 
@@ -172,7 +174,7 @@ class Reactor {
 
     void HeatWalls (int temp_change);
 
-    void AcceleratePiston (double vel_change);
+    void MovePiston (double dy);
 
     sf::Color GetWallsColor() const;
 

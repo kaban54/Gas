@@ -231,7 +231,7 @@ Piston::Piston (double x_, double y_, double width_, double height_,
     locked (false)
     {}
 
-void Piston::Move (double dt) {
+void Piston::Fall (double dt) {
     if (locked) {
         vy = 0;
         return;
@@ -246,6 +246,12 @@ void Piston::Move (double dt) {
     }
     vy += GRAV_ACC * dt;
     y += vy * dt;
+}
+
+void Piston::Move (double dy) {
+    y += dy;
+    if (y > max_y) y = max_y;
+    if (y < min_y) y = min_y;
 }
 
 void Piston::Draw (sf::RenderWindow& window) const {
@@ -306,7 +312,7 @@ Reactor::Reactor (double min_x_, double min_y_, double max_x_, double max_y_, si
 
 void Reactor::Proceed (double dt) {
     gas.MoveMolecules (dt);
-    pist.Move (dt);
+    pist.Fall (dt);
     gas.CollideMolecules();
     ReflectOffWals();
     ReflectOffPiston();
@@ -414,8 +420,8 @@ void Reactor::HeatWalls (int temp_change) {
     walls_temp += temp_change;
 }
 
-void Reactor::AcceleratePiston (double vel_change) {
-    pist.vy += vel_change;
+void Reactor::MovePiston (double dy) {
+    pist.Move (dy);
 }
 
 sf::Color Reactor::GetWallsColor() const {
