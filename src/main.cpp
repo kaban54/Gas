@@ -1,6 +1,7 @@
 #include "gas.h"
 #include "buttons.h"
 #include "reactorbtns.h"
+#include "plot.h"
 #include <cmath>
 #include <iostream>
 #include <stdio.h>
@@ -31,7 +32,7 @@ void RunReactorApp() {
     fps_txt.setFillColor (sf::Color::Cyan);
     char fps_str[8] = "";
 
-    Reactor rctr (70, 70, 670, 870, 0);
+    Reactor rctr (70, 70, 670, 870, 50);
 
     ButtonManager btns;
     btns.AddButton (new AddCircleBtn (80 , 925, 100, 100, &rctr));
@@ -41,10 +42,14 @@ void RunReactorApp() {
     btns.AddButton (new AcceleratePistonBtn (725, 80 , 100, 100, &rctr, -100));
     btns.AddButton (new AcceleratePistonBtn (725, 240, 100, 100, &rctr,  100));
 
+    Plot testplt (1000, 100, 900, 200, 10, 20);
+
+    sf::Clock plot_clk;
+
     sf::Clock clk;
     double dt = 0;
 
-    sf::RenderWindow window (sf::VideoMode (W, H), "GAS EEEEEEE");
+    sf::RenderWindow window (sf::VideoMode (W, H), "REACTOR");
     window.setFramerateLimit (600);
 
     double mousex = 0;
@@ -88,8 +93,15 @@ void RunReactorApp() {
         
         rctr.Proceed (dt);
 
+        if (plot_clk.getElapsedTime().asSeconds() >= 0.01) {
+            testplt.AddPoint (rctr.GetTemperature() / 1e6, plot_clk.restart().asSeconds());
+        }
+
         window.clear(sf::Color (192, 192, 192));
         rctr.Draw (window);
+
+        testplt.Draw (window);
+
         btns.DrawButtons (window);
         window.draw (fps_txt);
         window.display();
