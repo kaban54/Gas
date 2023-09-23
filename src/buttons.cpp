@@ -86,14 +86,6 @@ void TextButton::Draw (sf::RenderWindow& window) {
 }
 
 
-ImageButton::ImageButton (double x_, double y_, double w_, double h_, const sf::Texture* textures_[4]):
-    Button (x_, y_, w_, h_)
-    {
-        for (size_t i = 0; i < 4; i++) {
-            textures[i] = textures_[i];
-        }
-    }
-
 ImageButton::ImageButton (double x_, double y_, double w_, double h_):
     Button (x_, y_, w_, h_),
     textures ()
@@ -104,10 +96,11 @@ ImageButton::ImageButton():
     textures ()
     {}
 
-void ImageButton::SetTextures (const sf::Texture* textures_[4]) {
-    for (size_t i = 0; i < 4; i++) {
-        textures[i] = textures_[i];
-    }
+void ImageButton::SetTextures (const sf::Texture* t0, const sf::Texture* t1, const sf::Texture* t2, const sf::Texture* t3) {
+    textures[0] = t0;
+    textures[1] = t1;
+    textures[2] = t2;
+    textures[3] = t3;
 }
 
 void ImageButton::Draw (sf::RenderWindow& window) {

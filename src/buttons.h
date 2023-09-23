@@ -67,13 +67,11 @@ class ImageButton : public Button {
 
     public:
 
-    explicit ImageButton (double x_, double y_, double w_, double h_, const sf::Texture* textures_[4]);
-
     explicit ImageButton (double x_, double y_, double w_, double h_);
 
     explicit ImageButton();
 
-    void SetTextures (const sf::Texture* textures_[4]);
+    void SetTextures (const sf::Texture* t0, const sf::Texture* t1, const sf::Texture* t2, const sf::Texture* t3);
 
     virtual void Draw (sf::RenderWindow& window) override;
 };

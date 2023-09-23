@@ -12,6 +12,7 @@ const int H = 1080;
 const char* FONT_FILENAME = "fonts/font.ttf";
 
 void RunReactorApp();
+void LoadBtnTextures (sf::Texture* const textures);
 
 int main() {
     RunReactorApp();
@@ -21,8 +22,8 @@ int main() {
 
 void RunReactorApp() {
 
-    sf::Texture test_btn_texture;
-    test_btn_texture.loadFromFile ("images/suhariki.jpg");
+    sf::Texture textures [24];
+    LoadBtnTextures (textures);
 
     sf::Font font;
     font.loadFromFile (FONT_FILENAME);
@@ -35,10 +36,23 @@ void RunReactorApp() {
     Reactor rctr (70, 70, 670, 870, 50);
 
     ButtonManager btns;
-    btns.AddButton (new AddCircleBtn (80 , 925, 100, 100, &rctr));
-    btns.AddButton (new HeatWallsBtn (240, 925, 100, 100, &rctr, -1));
-    btns.AddButton (new HeatWallsBtn (400, 925, 100, 100, &rctr,  1));
-    btns.AddButton (new AddSquareBtn (560, 925, 100, 100, &rctr));
+
+    ImageButton* btn = new AddCircleBtn (80 , 925, 100, 100, &rctr);
+    btn -> SetTextures (&(textures[0]), &(textures[1]), &(textures[2]), nullptr);
+    btns.AddButton (btn);
+
+    btn = new HeatWallsBtn (240, 925, 100, 100, &rctr, -1);
+    btn -> SetTextures (&(textures[4]), &(textures[5]), &(textures[6]), nullptr);
+    btns.AddButton (btn);
+
+    btn = new HeatWallsBtn (400, 925, 100, 100, &rctr,  1);
+    btn -> SetTextures (&(textures[8]), &(textures[9]), &(textures[10]), nullptr);
+    btns.AddButton (btn);
+
+    btn = new AddSquareBtn (560, 925, 100, 100, &rctr);
+    btn -> SetTextures (&(textures[12]), &(textures[13]), &(textures[14]), nullptr);
+    btns.AddButton (btn);
+
     btns.AddButton (new AcceleratePistonBtn (725, 80 , 100, 100, &rctr, -100));
     btns.AddButton (new AcceleratePistonBtn (725, 240, 100, 100, &rctr,  100));
 
@@ -114,7 +128,7 @@ void RunReactorApp() {
             pres_graph.AddPoint (rctr.GetPressure() / plot_dt, plot_dt);
         }
 
-        window.clear(sf::Color (192, 192, 192));
+        window.clear(sf::Color (160, 160, 160));
         
         rctr.Draw (window);
         
@@ -128,4 +142,23 @@ void RunReactorApp() {
         window.draw (fps_txt);
         window.display();
     }
+}
+
+
+void LoadBtnTextures(sf::Texture* const textures) {
+    textures [0].loadFromFile ("textures/btn10.png");
+    textures [1].loadFromFile ("textures/btn11.png");
+    textures [2].loadFromFile ("textures/btn12.png");
+
+    textures [4].loadFromFile ("textures/btn20.png");
+    textures [5].loadFromFile ("textures/btn21.png");
+    textures [6].loadFromFile ("textures/btn22.png");
+
+    textures [8].loadFromFile ("textures/btn30.png");
+    textures [9].loadFromFile ("textures/btn31.png");
+    textures[10].loadFromFile ("textures/btn32.png");
+
+    textures[12].loadFromFile ("textures/btn40.png");
+    textures[13].loadFromFile ("textures/btn41.png");
+    textures[14].loadFromFile ("textures/btn42.png");
 }
