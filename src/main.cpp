@@ -35,8 +35,8 @@ void RunReactorApp() {
 
     ButtonManager btns;
     btns.AddButton (new AddCircleBtn (80 , 925, 100, 100, &rctr));
-    btns.AddButton (new AddCircleBtn (240, 925, 100, 100, &rctr));
-    btns.AddButton (new AddCircleBtn (400, 925, 100, 100, &rctr));
+    btns.AddButton (new HeatWallsBtn (240, 925, 100, 100, &rctr, -100));
+    btns.AddButton (new HeatWallsBtn (400, 925, 100, 100, &rctr,  100));
     btns.AddButton (new AddSquareBtn (560, 925, 100, 100, &rctr));
 
     sf::Clock clk;

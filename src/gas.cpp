@@ -365,3 +365,7 @@ void Reactor::AddSquare (double vel) {
     Molecule* mol = new SquareMol (Vec (max_x, max_y), velocity, 1);
     gas.AddMolecule (mol);
 }
+
+void Reactor::HeatWalls (double temp_change) {
+    walls_temp += temp_change;
+}

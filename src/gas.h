@@ -155,6 +155,8 @@ class Reactor {
     void AddCircle (double vel);
 
     void AddSquare (double vel);
+
+    void HeatWalls (double temp_change);
 };
 
 
