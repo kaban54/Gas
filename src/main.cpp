@@ -53,8 +53,14 @@ void RunReactorApp() {
     btn -> SetTextures (&(textures[12]), &(textures[13]), &(textures[14]), nullptr);
     btns.AddButton (btn);
 
-    btns.AddButton (new AcceleratePistonBtn (725, 80 , 100, 100, &rctr, -100));
-    btns.AddButton (new AcceleratePistonBtn (725, 240, 100, 100, &rctr,  100));
+    btn = new AcceleratePistonBtn (725, 80 , 100, 100, &rctr, -100);
+    btn -> SetTextures (&(textures[16]), &(textures[17]), &(textures[18]), nullptr);
+    btns.AddButton (btn);
+
+    btn = new AcceleratePistonBtn (725, 240, 100, 100, &rctr,  100);
+    btn -> SetTextures (&(textures[20]), &(textures[21]), &(textures[22]), nullptr);
+    btns.AddButton (btn);
+
 
     Plot temp_graph   (900, 35 , 1000, 180, 10, 20, 1, 4);
     Plot pres_graph   (900, 305, 1000, 180, 10, 10, 1, 2);
@@ -161,4 +167,12 @@ void LoadBtnTextures(sf::Texture* const textures) {
     textures[12].loadFromFile ("textures/btn40.png");
     textures[13].loadFromFile ("textures/btn41.png");
     textures[14].loadFromFile ("textures/btn42.png");
+
+    textures[16].loadFromFile ("textures/btn50.png");
+    textures[17].loadFromFile ("textures/btn51.png");
+    textures[18].loadFromFile ("textures/btn52.png");
+
+    textures[20].loadFromFile ("textures/btn60.png");
+    textures[21].loadFromFile ("textures/btn61.png");
+    textures[22].loadFromFile ("textures/btn62.png");
 }
