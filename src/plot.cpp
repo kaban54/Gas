@@ -38,33 +38,44 @@ Plot::Plot (double x_, double y_, double w_, double h_, double max_t_, double ma
     {}
 
 void Plot::Draw (sf::RenderWindow& window) {
-    sf::RectangleShape bg (sf::Vector2f (w, h));
-    bg.setPosition (x, y);
-    bg.setFillColor (bg_color);
-    window.draw (bg);
+    sf::RectangleShape rect (sf::Vector2f (w, h));
+    rect.setPosition (x, y);
+    rect.setFillColor (bg_color);
+    window.draw (rect);
 
-    sf::RectangleShape taxis (sf::Vector2f (w + 18, 6));
-    taxis.setPosition (x - 18, y + h);
-    taxis.setFillColor (axis_color);
-    window.draw (taxis);
+    rect.setFillColor (axis_color);
+    rect.setSize (sf::Vector2f (w + 18, 6));
+    rect.setPosition (x - 18, y + h);
+    window.draw (rect);
 
-    sf::RectangleShape faxis (sf::Vector2f (6, h + 18));
-    faxis.setPosition (x - 6, y);
-    faxis.setFillColor (axis_color);
-    window.draw (faxis);
+    rect.setSize (sf::Vector2f (6, h + 18));
+    rect.setPosition (x - 6, y);
+    window.draw (rect);
 
-    sf::RectangleShape tmark (sf::Vector2f (6, 18));
-    tmark.setFillColor (axis_color);
+    char buf [PLOT_TXTBUFSIZE] = "";
+    sf::Text txt (buf, font, 20);
+    txt.setFillColor (txt_color);
+
+    rect.setSize (sf::Vector2f (6, 15));
     for (double t = 0; t <= max_t; t += t_unit_size) {
-        tmark.setPosition (x - 6 + t / max_t * w, y + h);
-        window.draw (tmark);
+        rect.setPosition (x - 6 + t / max_t * w, y + h);
+        window.draw (rect);
+
+        snprintf (buf, 127, "%.0lf", t0 + t <= cur_t ? t0 + t : t0 + t - max_t);
+        txt.setString (buf);
+        txt.setPosition (x - 12 + t / max_t * w, y + h + 15);
+        window.draw (txt);
     }
 
-    sf::RectangleShape fmark (sf::Vector2f (18, 6));
-    fmark.setFillColor (axis_color);
+    rect.setSize (sf::Vector2f (15, 6));
     for (double f = 0; f <= max_f; f += f_unit_size) {
-        fmark.setPosition (x - 18, y + h - f / max_f * h);
-        window.draw (fmark);
+        rect.setPosition (x - 15, y + h - f / max_f * h);
+        window.draw (rect);
+
+        snprintf (buf, 127, "%.0lf", f);
+        txt.setString (buf);
+        txt.setPosition (x - 18 * (strlen(buf) + 1), y + h - f / max_f * h - 12);
+        window.draw (txt);
     }
 
     sf::CircleShape pnt (2);
@@ -78,10 +89,15 @@ void Plot::Draw (sf::RenderWindow& window) {
         window.draw (pnt);
     }
 
-    sf::RectangleShape sep (sf::Vector2f (4, h));
-    sep.setFillColor (sf::Color::White);
-    sep.setPosition (x + w * (cur_t - t0) / max_t, y);
-    window.draw (sep);
+    rect.setSize (sf::Vector2f (4, h));
+    rect.setFillColor (sf::Color::White);
+    rect.setPosition (x + w * (cur_t - t0) / max_t, y);
+    window.draw (rect);
+
+    txt.setString (title);
+    txt.setCharacterSize (30);
+    txt.setPosition (x, y - 35);
+    window.draw (txt);
 }
 
 void Plot::AddPoint (double val, double dt) {
@@ -91,8 +107,6 @@ void Plot::AddPoint (double val, double dt) {
     while (!points.empty() && points.front().t + max_t <= cur_t) points.pop_front();
 
     points.push_back (Pair (cur_t, val));
-
-    //std::cout << "cur_t = " << cur_t << "; t0 = " << t0 << ";\n";
 }
 
 void Plot::SetBGColor (const sf::Color& clr) {
@@ -109,4 +123,12 @@ void Plot::SetAxisColor (const sf::Color& clr) {
 
 void Plot::SetTxtColor (const sf::Color& clr) {
     txt_color = clr;
+}
+
+void Plot::SetFont (const sf::Font& fnt) {
+    font = fnt;
+}
+
+void Plot::SetTitle (const char* const str) {
+    strncpy (title, str, PLOT_TXTBUFSIZE - 1);
 }

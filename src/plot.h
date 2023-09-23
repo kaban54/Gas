@@ -8,7 +8,9 @@
 #include <string>
 #include <iostream>
 #include <deque>
+#include <string.h>
 
+const size_t PLOT_TXTBUFSIZE = 128;
 
 struct Pair {
     double t;
@@ -38,6 +40,8 @@ class Plot {
     sf::Color plot_color;
     sf::Color axis_color;
     sf::Color txt_color;
+    sf::Font  font;
+    char title[PLOT_TXTBUFSIZE];
 
     bool connect_points;
 
@@ -58,6 +62,8 @@ class Plot {
     void SetPlotColor (const sf::Color& clr);
     void SetAxisColor (const sf::Color& clr);
     void SetTxtColor  (const sf::Color& clr);
+    void SetFont      (const sf::Font&  fnt);
+    void SetTitle     (const char* const str);
 };
 
 
