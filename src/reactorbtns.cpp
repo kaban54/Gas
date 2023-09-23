@@ -34,3 +34,13 @@ void HeatWallsBtn::Release() {
     rctr -> HeatWalls (temp_change);
     std::cout << "btn works! temp changed by " << temp_change << "\n";
 }
+
+
+AcceleratePistonBtn::AcceleratePistonBtn (double x_, double y_, double w_, double h_, Reactor* rctr_, double vel_change_):
+    ReactorBtn (x_, y_, w_, h_, rctr_),
+    vel_change (vel_change_)
+    {}
+
+void AcceleratePistonBtn::Release() {
+    rctr -> AcceleratePiston (vel_change);
+}

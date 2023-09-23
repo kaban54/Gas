@@ -38,6 +38,8 @@ void RunReactorApp() {
     btns.AddButton (new HeatWallsBtn (240, 925, 100, 100, &rctr, -100));
     btns.AddButton (new HeatWallsBtn (400, 925, 100, 100, &rctr,  100));
     btns.AddButton (new AddSquareBtn (560, 925, 100, 100, &rctr));
+    btns.AddButton (new AcceleratePistonBtn (725, 80 , 100, 100, &rctr, -100));
+    btns.AddButton (new AcceleratePistonBtn (725, 240, 100, 100, &rctr,  100));
 
     sf::Clock clk;
     double dt = 0;

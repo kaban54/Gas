@@ -107,11 +107,11 @@ class Piston {
     const double min_y;
     const double max_y;
     const double x;
-    double vy;
 
     public:
     const double height;
     double y;
+    double vy;
 
     explicit Piston (double x_, double y_, double width_, double height_,
                      double min_y_, double max_y_, int mass_, double vy_ = 0);
@@ -157,6 +157,8 @@ class Reactor {
     void AddSquare (double vel);
 
     void HeatWalls (double temp_change);
+
+    void AcceleratePiston (double vel_change);
 };
 
 

@@ -219,11 +219,11 @@ Piston::Piston (double x_, double y_, double width_, double height_,
 void Piston::Move (double dt) {
     if (y > max_y) {
         y = max_y;
-        vy = 0;
+        if (vy > 0) vy = 0;
     }
     if (y < min_y) {
         y = min_y;
-        vy = 0;
+        if (vy < 0) vy = 0;
     }
     vy += GRAV_ACC * dt;
     y += vy * dt;
@@ -368,4 +368,8 @@ void Reactor::AddSquare (double vel) {
 
 void Reactor::HeatWalls (double temp_change) {
     walls_temp += temp_change;
+}
+
+void Reactor::AcceleratePiston (double vel_change) {
+    pist.vy += vel_change;
 }

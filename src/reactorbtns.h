@@ -40,7 +40,18 @@ class HeatWallsBtn : public ReactorBtn {
     virtual void Press() override {}
 
     virtual void Release() override;
+};
 
+
+class AcceleratePistonBtn : public ReactorBtn {
+    double vel_change;
+
+    public:
+    explicit AcceleratePistonBtn (double x_, double y_, double w_, double h_, Reactor* rctr_, double vel_change_);
+
+    virtual void Press() override {}
+
+    virtual void Release() override;
 };
 
 #endif
