@@ -32,25 +32,30 @@ void RunReactorApp() {
     fps_txt.setFillColor (sf::Color::Cyan);
     char fps_str[8] = "";
 
-    Reactor rctr (70, 70, 670, 870, 100);
+    Reactor rctr (70, 70, 670, 870, 50);
 
     ButtonManager btns;
     btns.AddButton (new AddCircleBtn (80 , 925, 100, 100, &rctr));
-    btns.AddButton (new HeatWallsBtn (240, 925, 100, 100, &rctr, -100));
-    btns.AddButton (new HeatWallsBtn (400, 925, 100, 100, &rctr,  100));
+    btns.AddButton (new HeatWallsBtn (240, 925, 100, 100, &rctr, -1));
+    btns.AddButton (new HeatWallsBtn (400, 925, 100, 100, &rctr,  1));
     btns.AddButton (new AddSquareBtn (560, 925, 100, 100, &rctr));
     btns.AddButton (new AcceleratePistonBtn (725, 80 , 100, 100, &rctr, -100));
     btns.AddButton (new AcceleratePistonBtn (725, 240, 100, 100, &rctr,  100));
 
-    Plot temp_graph   (1000, 35 , 900, 180, 10, 20, 1, 4);
-    Plot pres_graph   (1000, 305, 900, 180, 10, 10, 1, 2);
-    Plot circle_graph (1000, 575, 900, 180, 10, 200, 1, 20);
-    Plot square_graph (1000, 845, 900, 180, 10, 200, 1, 20);
+    Plot temp_graph   (900, 35 , 1000, 180, 10, 20, 1, 4);
+    Plot pres_graph   (900, 305, 1000, 180, 10, 10, 1, 2);
+    Plot circle_graph (900, 575, 1000, 180, 10, 200, 1, 40);
+    Plot square_graph (900, 845, 1000, 180, 10, 200, 1, 40);
+
+    temp_graph.SetPlotColor (sf::Color (255, 128, 0));
+    circle_graph.SetPlotColor (CIRCLE_MOL_COLOR);
+    square_graph.SetPlotColor (SQUARE_MOL_COLOR);
 
     sf::Clock plot_clk;
-
+    sf::Clock fps_clk;
     sf::Clock clk;
     double dt = 0;
+    int frame_counter = 0;
 
     sf::RenderWindow window (sf::VideoMode (W, H), "REACTOR");
     window.setFramerateLimit (600);
@@ -91,26 +96,35 @@ void RunReactorApp() {
 
         dt = clk.restart().asSeconds();
 
-        sprintf (fps_str, "%.0f", 1 / dt);
-        fps_txt.setString (fps_str);
+        frame_counter++;
+        if (fps_clk.getElapsedTime().asSeconds() >= 1) {
+            sprintf (fps_str, "%d", frame_counter);
+            fps_txt.setString (fps_str);
+            fps_clk.restart();
+            frame_counter = 0;
+        }
         
         rctr.Proceed (dt);
 
         temp_graph.AddPoint (rctr.GetTemperature(), dt);
         circle_graph.AddPoint (rctr.GetNumOfCircles(), dt);
         square_graph.AddPoint (rctr.GetNumOfSquares(), dt);
-
         if (plot_clk.getElapsedTime().asSeconds() >= 0.2) {
             double plot_dt = plot_clk.restart().asSeconds();
             pres_graph.AddPoint (rctr.GetPressure() / plot_dt, plot_dt);
         }
+
         window.clear(sf::Color (192, 192, 192));
+        
         rctr.Draw (window);
+        
         temp_graph.Draw (window);
         pres_graph.Draw (window);
         circle_graph.Draw (window);
         square_graph.Draw (window);
+
         btns.DrawButtons (window);
+        
         window.draw (fps_txt);
         window.display();
     }

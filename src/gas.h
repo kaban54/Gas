@@ -104,6 +104,8 @@ class Gas {
     size_t GetNumOfSquares() const;
 };
 
+void ReflectMolecules (Molecule* mol1, Molecule* mol2);
+
 
 class Piston {
     const int mass;
@@ -133,7 +135,7 @@ class Reactor {
     const double max_x;
     const double min_y;
     const double max_y;
-    double walls_temp;
+    int walls_temp;
     Piston pist;
     double pressure;
 
@@ -164,12 +166,9 @@ class Reactor {
 
     void AddSquare (double vel);
 
-    void HeatWalls (double temp_change);
+    void HeatWalls (int temp_change);
 
     void AcceleratePiston (double vel_change);
 };
-
-
-void ReflectMolecules (Molecule* mol1, Molecule* mol2);
 
 #endif

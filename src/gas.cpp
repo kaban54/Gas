@@ -225,7 +225,7 @@ Piston::Piston (double x_, double y_, double width_, double height_,
     width (width_),
     height (height_),
     min_y (min_y_),
-    max_y (max_y_ - height_),
+    max_y (max_y_ - height_ - 2 * BASE_MOL_RADIUS),
     mass (mass_),
     vy (vy_)
     {}
@@ -325,6 +325,8 @@ void Reactor::ReflectOffWals() {
             if (mol -> velocity.x > 0) {
                 mol -> velocity.x = -mol -> velocity.x;
                 pressure += 2 * mol -> mass * fabs(mol -> velocity.x);
+                if (walls_temp != 0)
+                    mol -> velocity = !(mol -> velocity) * ((mol -> velocity).GetLen() + 5 * walls_temp);
             }
         }
         if (mol -> pos.x - mol -> radius <= min_x) {
@@ -332,6 +334,8 @@ void Reactor::ReflectOffWals() {
             if (mol -> velocity.x < 0) {
                 mol -> velocity.x = -mol -> velocity.x;
                 pressure += 2 * mol -> mass * fabs(mol -> velocity.x);
+                if (walls_temp != 0)
+                    mol -> velocity = !(mol -> velocity) * ((mol -> velocity).GetLen() + 5 * walls_temp);
             }
         }
         if (mol -> pos.y + mol -> radius >= max_y) {
@@ -339,6 +343,8 @@ void Reactor::ReflectOffWals() {
             if (mol -> velocity.y > 0) {
                 mol -> velocity.y = -mol -> velocity.y;
                 pressure += 2 * mol -> mass * fabs(mol -> velocity.y);
+                if (walls_temp != 0)
+                    mol -> velocity = !(mol -> velocity) * ((mol -> velocity).GetLen() + 5 * walls_temp);
             }
         }
         if (mol -> pos.y - mol -> radius <= min_y) {
@@ -346,6 +352,8 @@ void Reactor::ReflectOffWals() {
             if (mol -> velocity.y < 0) {
                 mol -> velocity.y = -mol -> velocity.y;
                 pressure += 2 * mol -> mass * fabs(mol -> velocity.y);
+                if (walls_temp != 0)
+                    mol -> velocity = !(mol -> velocity) * ((mol -> velocity).GetLen() + 5 * walls_temp);
             }
         }
     }
@@ -377,18 +385,18 @@ void Reactor::DrawWalls (sf::RenderWindow& window) const {
 void Reactor::AddCircle (double vel) {
     Vec velocity (vel, 0);
     velocity.RotateAroundZ (GetRandAngle() / -4);
-    Molecule* mol = new CircleMol (Vec (min_x, max_y), velocity, 1);
+    Molecule* mol = new CircleMol (Vec (min_x, max_y), velocity, 1, 100);
     gas.AddMolecule (mol);
 }
 
 void Reactor::AddSquare (double vel) {
     Vec velocity (vel, 0);
     velocity.RotateAroundZ (GetRandAngle() / 4 + M_PI);
-    Molecule* mol = new SquareMol (Vec (max_x, max_y), velocity, 1);
+    Molecule* mol = new SquareMol (Vec (max_x, max_y), velocity, 1, 100);
     gas.AddMolecule (mol);
 }
 
-void Reactor::HeatWalls (double temp_change) {
+void Reactor::HeatWalls (int temp_change) {
     walls_temp += temp_change;
 }
 

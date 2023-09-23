@@ -12,7 +12,7 @@ AddCircleBtn::AddCircleBtn (double x_, double y_, double w_, double h_, Reactor*
     {}
 
 void AddCircleBtn::Press() {
-    rctr -> AddCircle (400);
+    for (size_t i = 0; i < 10; i++) rctr -> AddCircle (400);
 }
 
 
@@ -21,7 +21,7 @@ AddSquareBtn::AddSquareBtn (double x_, double y_, double w_, double h_, Reactor*
     {}
 
 void AddSquareBtn::Press() {
-    rctr -> AddSquare (400);
+    for (size_t i = 0; i < 10; i++) rctr -> AddSquare (400);
 }
 
 
@@ -32,7 +32,6 @@ HeatWallsBtn::HeatWallsBtn (double x_, double y_, double w_, double h_, Reactor*
 
 void HeatWallsBtn::Release() {
     rctr -> HeatWalls (temp_change);
-    std::cout << "btn works! temp changed by " << temp_change << "\n";
 }
 
 
