@@ -36,8 +36,8 @@ void RunReactorApp() {
 
     Plot temp_graph   (930, 35 , 950, 180, 10, 10, 1, 4);
     Plot pres_graph   (930, 305, 950, 180, 10,  5, 1, 2);
-    Plot circle_graph (930, 575, 950, 180, 10, 200, 1, 50);
-    Plot square_graph (930, 845, 950, 180, 10, 200, 1, 50);
+    Plot circle_graph (930, 575, 950, 180, 10, 100, 1, 50);
+    Plot square_graph (930, 845, 950, 180, 10, 100, 1, 50);
     temp_graph.SetPlotColor (sf::Color (255, 128, 0));
     pres_graph.SetPlotColor (sf::Color::Green);
     circle_graph.SetPlotColor (CIRCLE_MOL_COLOR);
