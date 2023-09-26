@@ -13,7 +13,7 @@ const double BASE_MOL_RADIUS = 5;
 const sf::Color CIRCLE_MOL_COLOR = sf::Color::Red;
 const sf::Color SQUARE_MOL_COLOR = sf::Color::Yellow;
 
-const double MIN_REACTION_ENERGY = 320000;
+const double MIN_REACTION_ENERGY = 6000;
 
 
 enum MoleculeTypes {
@@ -26,6 +26,7 @@ class Molecule {
     Vec pos;
     Vec velocity;
     unsigned int mass;
+    double potential_energy;
     double dist_to_react;
     double radius;
     const MoleculeTypes type;
@@ -35,7 +36,7 @@ class Molecule {
 
     double GetEnergy() const;
 
-    double GetMomentum() const;
+    Vec GetMomentum() const;
 
     bool CanReact() const;
 

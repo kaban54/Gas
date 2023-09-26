@@ -15,7 +15,7 @@ const int PISTON_MASS = 1000;
 const double PISTON_HEIGHT = 50;
 const double GRAV_ACC = 100;
 
-const double REACTOR_WALLS_THIKNESS = 25;
+const double REACTOR_WALLS_THICKNESS = 25;
 
 
 class Piston {

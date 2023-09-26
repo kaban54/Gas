@@ -5,17 +5,18 @@ Molecule::Molecule (const Vec& pos_, const Vec& velocity_, unsigned int mass_,
     pos (pos_),
     velocity (velocity_),
     mass (mass_),
+    potential_energy (0),
     type (type_),
     dist_to_react (dist_to_react_),
     radius (BASE_MOL_RADIUS + mass_)
     {}
 
 double Molecule::GetEnergy() const {
-    return mass * (velocity, velocity);
+    return mass * (velocity, velocity) + potential_energy;
 }
 
-double Molecule::GetMomentum() const {
-    return mass * velocity.GetLen();
+Vec Molecule::GetMomentum() const {
+    return mass * velocity;
 }
 
 bool Molecule::CanReact() const {
@@ -129,10 +130,13 @@ void Gas::ReactCircleCircle (size_t index1, size_t index2) {
     Vec newpos = (mol1 -> pos + mol2 -> pos) / 2;
     int newmass = mol1 -> mass + mol2 -> mass;
 
-    Vec newvel (std::sqrt((mol1 -> GetEnergy() + mol2 -> GetEnergy()) / newmass), 0);
-    newvel.RotateAroundZ (GetRandAngle());
+    Vec newvel = (mol1 -> GetMomentum() + mol2 -> GetMomentum()) / newmass;
 
     Molecule* newmol = new SquareMol (newpos, newvel, newmass);
+
+    newmol -> potential_energy += mol1 -> mass * (mol1 -> velocity, mol1 -> velocity) +
+                                  mol2 -> mass * (mol2 -> velocity, mol2 -> velocity) -
+                                  newmass      * (newvel          , newvel          );
 
     AddMolecule (newmol);
     RemoveMolecule (index2);
@@ -149,7 +153,11 @@ void Gas::ReactSquareCircle (size_t index1, size_t index2) {
 
     int newmass = mol1 -> mass + mol2 -> mass;
 
-    Vec newvel = !(mol1 -> velocity) * std::sqrt((mol1 -> GetEnergy() + mol2 -> GetEnergy()) / newmass);
+    Vec newvel = (mol1 -> GetMomentum() + mol2 -> GetMomentum()) / newmass;
+
+    mol1 -> potential_energy += mol1 -> mass * (mol1 -> velocity, mol1 -> velocity) +
+                                mol2 -> mass * (mol2 -> velocity, mol2 -> velocity) -
+                                newmass      * (newvel          , newvel          );
 
     mol1 -> velocity = newvel;
     mol1 -> SetMass (newmass);
