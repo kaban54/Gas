@@ -28,12 +28,12 @@ class Molecule {
     Vec velocity;
     unsigned int mass;
     double potential_energy;
-    double dist_to_react;
+    double status;
     double radius;
     const MoleculeTypes type;
 
     explicit Molecule (const Vec& pos_, const Vec& velocity_, unsigned int mass_,
-                       MoleculeTypes type_, double dist_to_react_);
+                       MoleculeTypes type_, double status_);
 
     double GetKineticEnergy() const;
 
@@ -54,7 +54,7 @@ class Molecule {
 class CircleMol : public Molecule {
     public:
     explicit CircleMol (const Vec& pos_, const Vec& velocity_, unsigned int mass_,
-                        double dist_to_react_ = 0);
+                        double status_ = 0);
 
     virtual void Draw (sf::RenderWindow& window) const override;
 };
@@ -62,7 +62,7 @@ class CircleMol : public Molecule {
 class SquareMol : public Molecule {
     public:
     explicit SquareMol (const Vec& pos_, const Vec& velocity_, unsigned int mass_,
-                        double dist_to_react_ = 0);
+                        double status_ = 0);
 
     virtual void Draw (sf::RenderWindow& window) const override;
 };

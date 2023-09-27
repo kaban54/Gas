@@ -1,13 +1,13 @@
 #include "molecules.h"
 
 Molecule::Molecule (const Vec& pos_, const Vec& velocity_, unsigned int mass_,
-                    MoleculeTypes type_, double dist_to_react_):
+                    MoleculeTypes type_, double status_):
     pos (pos_),
     velocity (velocity_),
     mass (mass_),
     potential_energy (0),
     type (type_),
-    dist_to_react (dist_to_react_),
+    status (status_),
     radius (BASE_MOL_RADIUS + mass_)
     {}
 
@@ -24,12 +24,16 @@ Vec Molecule::GetMomentum() const {
 }
 
 bool Molecule::CanReact() const {
-    return dist_to_react <= 0;
+    return status == 0;
 }
 
 void Molecule::Move (double dt) {
     pos += velocity * dt;
-    dist_to_react -= velocity.GetLen() * dt;
+    
+    if (status > 0) {
+        status -= velocity.GetLen() * dt;
+        if (status < 0) status = 0;
+    }
 }
 
 void Molecule::SetMass (unsigned int new_mass) {
@@ -38,8 +42,8 @@ void Molecule::SetMass (unsigned int new_mass) {
 }
 
 
-CircleMol::CircleMol (const Vec& pos_, const Vec& velocity_, unsigned int mass_, double dist_to_react_):
-    Molecule (pos_, velocity_, mass_, MOLECULE_CIRCLE, dist_to_react_)
+CircleMol::CircleMol (const Vec& pos_, const Vec& velocity_, unsigned int mass_, double status_):
+    Molecule (pos_, velocity_, mass_, MOLECULE_CIRCLE, status_)
     {}
 
 void CircleMol::Draw (sf::RenderWindow& window) const {
@@ -50,8 +54,8 @@ void CircleMol::Draw (sf::RenderWindow& window) const {
 }
 
 
-SquareMol::SquareMol (const Vec& pos_, const Vec& velocity_, unsigned int mass_, double dist_to_react_):
-    Molecule (pos_, velocity_, mass_, MOLECULE_SQUARE, dist_to_react_)
+SquareMol::SquareMol (const Vec& pos_, const Vec& velocity_, unsigned int mass_, double status_):
+    Molecule (pos_, velocity_, mass_, MOLECULE_SQUARE, status_)
     {}
 
 void SquareMol::Draw (sf::RenderWindow& window) const {
@@ -112,13 +116,20 @@ void Gas::CollideMolecules() {
         for (size_t j = i + 1; j < size; j++) {
             if (!(molecules[j] -> CanReact())) continue;
             if (Intersect (molecules[i], molecules[j])) {
-                if (molecules[i] -> GetEnergy() + molecules[j] -> GetEnergy() >= MIN_REACTION_ENERGY)
+                if (molecules[i] -> GetEnergy() + molecules[j] -> GetEnergy() >= MIN_REACTION_ENERGY) {
                     React (i, j);
+                    if (!(molecules[i] -> CanReact())) break;
+                }
                 else
                     ReflectMolecules (molecules[i], molecules[j]);
             }
         }
     }
+
+    for (int i = size - 1; i >= 0; i--) {
+        if (molecules[i] -> status < 0) RemoveMolecule (i);
+    }
+
 }
 
 void Gas::React (size_t index1, size_t index2) {
@@ -152,8 +163,8 @@ void Gas::ReactCircleCircle (size_t index1, size_t index2) {
     newmol -> potential_energy += mol1 -> GetKineticEnergy() + mol2 -> GetKineticEnergy() - newmass * (newvel, newvel);
 
     AddMolecule (newmol);
-    RemoveMolecule (index2);
-    RemoveMolecule (index1);
+    mol1 -> status = -1;
+    mol2 -> status = -1;
 }
 
 void Gas::ReactCircleSquare (size_t index1, size_t index2) {
@@ -173,7 +184,7 @@ void Gas::ReactSquareCircle (size_t index1, size_t index2) {
     mol1 -> velocity = newvel;
     mol1 -> SetMass (newmass);
 
-    RemoveMolecule (index2);
+    mol2 -> status = -1;
 }
 
 void Gas::ReactSquareSquare (size_t index1, size_t index2) {
@@ -194,8 +205,8 @@ void Gas::ReactSquareSquare (size_t index1, size_t index2) {
         vel.RotateAroundZ (angle);
     }
 
-    RemoveMolecule (index2);
-    RemoveMolecule (index1);
+    mol1 -> status = -1;
+    mol2 -> status = -1;
 }
 
 double Gas::GetTemperature() const {
