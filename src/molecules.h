@@ -6,7 +6,7 @@
 #include <vector>
 #include <assert.h>
 #include <cstdlib>
-
+#include <string.h>
 
 const double BASE_MOL_RADIUS = 5;
 
@@ -15,6 +15,7 @@ const sf::Color SQUARE_MOL_COLOR = sf::Color::Yellow;
 
 const double MIN_REACTION_ENERGY = 6000;
 
+const size_t BASE_GAS_CAPACITY = 8;
 
 enum MoleculeTypes {
     MOLECULE_CIRCLE = 0,
@@ -33,6 +34,8 @@ class Molecule {
 
     explicit Molecule (const Vec& pos_, const Vec& velocity_, unsigned int mass_,
                        MoleculeTypes type_, double dist_to_react_);
+
+    double GetKineticEnergy() const;
 
     double GetEnergy() const;
 
@@ -69,7 +72,11 @@ bool Intersect (Molecule* mol1, Molecule* mol2);
 
 class Gas {
     public:
-    std::vector<Molecule*> molecules;
+    Molecule** molecules;
+    size_t size;
+    size_t capacity;
+
+    Gas();
 
     ~Gas();
 
@@ -102,5 +109,6 @@ class Gas {
 
 void ReflectMolecules (Molecule* mol1, Molecule* mol2);
 
+void *Recalloc (void *memptr, size_t num, size_t size, size_t old_num);
 
 #endif

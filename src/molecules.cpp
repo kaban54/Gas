@@ -11,8 +11,12 @@ Molecule::Molecule (const Vec& pos_, const Vec& velocity_, unsigned int mass_,
     radius (BASE_MOL_RADIUS + mass_)
     {}
 
+double Molecule::GetKineticEnergy() const {
+    return mass * (velocity, velocity);
+}
+
 double Molecule::GetEnergy() const {
-    return mass * (velocity, velocity) + potential_energy;
+    return GetKineticEnergy() + potential_energy;
 }
 
 Vec Molecule::GetMomentum() const {
@@ -39,7 +43,7 @@ CircleMol::CircleMol (const Vec& pos_, const Vec& velocity_, unsigned int mass_,
     {}
 
 void CircleMol::Draw (sf::RenderWindow& window) const {
-    sf::CircleShape circle (radius); // change to sprite
+    sf::CircleShape circle (radius);
     circle.setPosition (pos.x - radius, pos.y - radius);
     circle.setFillColor (CIRCLE_MOL_COLOR);
     window.draw (circle);
@@ -51,7 +55,7 @@ SquareMol::SquareMol (const Vec& pos_, const Vec& velocity_, unsigned int mass_,
     {}
 
 void SquareMol::Draw (sf::RenderWindow& window) const {
-    sf::RectangleShape square (sf::Vector2f(radius * 2, radius * 2)); // change to sprite
+    sf::RectangleShape square (sf::Vector2f(radius * 2, radius * 2));
     square.setPosition (pos.x - radius, pos.y - radius);
     square.setFillColor (SQUARE_MOL_COLOR);
     window.draw (square);
@@ -62,39 +66,50 @@ bool Intersect (Molecule* mol1, Molecule* mol2) {
     else return false;
 }
 
+Gas::Gas() {
+    size = 0;
+    capacity = BASE_GAS_CAPACITY;
+    molecules = (Molecule**) calloc (capacity, sizeof (molecules[0]));
+    assert (molecules != nullptr);
+}
 
 Gas::~Gas() {
-    for (size_t i = 0; i < molecules.size(); i++) {
+    for (size_t i = 0; i < size; i++) {
         delete molecules[i];
     }
+    free (molecules);
 }
 
 void Gas::AddMolecule (Molecule *mol) {
-    molecules.push_back (mol);
+    if (size >= capacity) {
+        molecules = (Molecule**) Recalloc (molecules, capacity * 2, sizeof (molecules[0]), capacity);
+        assert (molecules != nullptr);
+        capacity *= 2;
+    }
+    molecules [size++] = mol;
 }
 
 void Gas::RemoveMolecule (size_t index) {
     delete molecules[index];
-    molecules[index] = molecules[molecules.size() - 1];
-    molecules.pop_back();
+    molecules[index] = molecules[--size];
 }
 
 void Gas::DrawMolecules (sf::RenderWindow& window) const {
-    for (size_t i = 0; i < molecules.size(); i++) {
+    for (size_t i = 0; i < size; i++) {
         molecules[i] -> Draw (window);
     }
 }
 
 void Gas::MoveMolecules (double dt) {
-    for (size_t i = 0; i < molecules.size(); i++) {
+    for (size_t i = 0; i < size; i++) {
         molecules[i] -> Move (dt);
     }
 }
 
 void Gas::CollideMolecules() {
-    for (size_t i = 0; i < molecules.size(); i++) {
+    for (size_t i = 0; i < size; i++) {
         if (!(molecules[i] -> CanReact())) continue;
-        for (size_t j = i + 1; j < molecules.size(); j++) {
+        for (size_t j = i + 1; j < size; j++) {
             if (!(molecules[j] -> CanReact())) continue;
             if (Intersect (molecules[i], molecules[j])) {
                 if (molecules[i] -> GetEnergy() + molecules[j] -> GetEnergy() >= MIN_REACTION_ENERGY)
@@ -134,9 +149,7 @@ void Gas::ReactCircleCircle (size_t index1, size_t index2) {
 
     Molecule* newmol = new SquareMol (newpos, newvel, newmass);
 
-    newmol -> potential_energy += mol1 -> mass * (mol1 -> velocity, mol1 -> velocity) +
-                                  mol2 -> mass * (mol2 -> velocity, mol2 -> velocity) -
-                                  newmass      * (newvel          , newvel          );
+    newmol -> potential_energy += mol1 -> GetKineticEnergy() + mol2 -> GetKineticEnergy() - newmass * (newvel, newvel);
 
     AddMolecule (newmol);
     RemoveMolecule (index2);
@@ -155,9 +168,7 @@ void Gas::ReactSquareCircle (size_t index1, size_t index2) {
 
     Vec newvel = (mol1 -> GetMomentum() + mol2 -> GetMomentum()) / newmass;
 
-    mol1 -> potential_energy += mol1 -> mass * (mol1 -> velocity, mol1 -> velocity) +
-                                mol2 -> mass * (mol2 -> velocity, mol2 -> velocity) -
-                                newmass      * (newvel          , newvel          );
+    mol1 -> potential_energy += mol1 -> GetKineticEnergy() + mol2 -> GetKineticEnergy() - newmass * (newvel, newvel);
 
     mol1 -> velocity = newvel;
     mol1 -> SetMass (newmass);
@@ -189,22 +200,22 @@ void Gas::ReactSquareSquare (size_t index1, size_t index2) {
 
 double Gas::GetTemperature() const {
     double energy = 0;
-    for (size_t i = 0; i < molecules.size(); i++)
-        energy += molecules[i] -> GetEnergy();
+    for (size_t i = 0; i < size; i++)
+        energy += molecules[i] -> GetKineticEnergy();
     
-    return energy / molecules.size() / 1e6;
+    return energy / size / 1e6;
 }
 
 size_t Gas::GetNumOfCircles() const {
     size_t count = 0;
-    for (size_t i = 0; i < molecules.size(); i++)
+    for (size_t i = 0; i < size; i++)
         if (molecules[i] -> type == MOLECULE_CIRCLE) count++;
     return count;
 }
 
 size_t Gas::GetNumOfSquares() const {
     size_t count = 0;
-    for (size_t i = 0; i < molecules.size(); i++)
+    for (size_t i = 0; i < size; i++)
         if (molecules[i] -> type == MOLECULE_SQUARE) count++;
     return count;
 }
@@ -224,3 +235,11 @@ void ReflectMolecules (Molecule* mol1, Molecule* mol2) {
     mol2 -> velocity += (dif * (new_v2 - v2));
 }
 
+void *Recalloc (void *memptr, size_t num, size_t size, size_t old_num) {
+    memptr = realloc (memptr, num * size);
+    if (memptr == nullptr) return nullptr;
+
+    if (num > old_num) memset ((void *) ((char *) memptr + old_num * size), 0, (num - old_num) * size);
+
+    return memptr;
+}

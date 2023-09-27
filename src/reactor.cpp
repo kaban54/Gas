@@ -119,7 +119,7 @@ size_t Reactor::GetNumOfSquares() const {
 }
 
 void Reactor::ReflectOffWals() {
-    for (size_t i = 0; i < gas.molecules.size(); i++) {
+    for (size_t i = 0; i < gas.size; i++) {
         Molecule* mol = gas.molecules[i];
 
         if (mol -> pos.x + mol -> radius >= max_x) {
@@ -162,7 +162,7 @@ void Reactor::ReflectOffWals() {
 }
 
 void Reactor::ReflectOffPiston() {
-    for (size_t i = 0; i < gas.molecules.size(); i++) {
+    for (size_t i = 0; i < gas.size; i++) {
         Molecule* mol = gas.molecules[i];
         if (mol -> pos.y - mol -> radius <= pist.y + pist.height)
             pressure += pist.ReflectMol (mol);
